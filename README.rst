@@ -3,7 +3,7 @@
 Hdlparse
 ========
 
-Hdlparse is a simple package implementing a rudimentary lexer for VHDL. It is not capable of fully parsing the entire language. Rather, it is meant to extract enouch key information fro a source file to create generated documentation.
+Hdlparse is a simple package implementing a rudimentary parser for VHDL. It is not capable of fully parsing the entire language. Rather, it is meant to extract enough key information from a source file to create generated documentation.
 
 
 Requirements

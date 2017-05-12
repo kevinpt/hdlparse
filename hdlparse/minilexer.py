@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Copyright © 2017 Kevin Thibedeau
+# Distributed under the terms of the MIT license
 from __future__ import print_function
 
 import re
@@ -7,8 +10,14 @@ import re
 __version__ = '0.9'
 
 class MiniLexer(object):
+  '''Simple lexer state machine with regex matching rules'''
 
   def __init__(self, tokens, flags=re.MULTILINE):
+    '''Create a new lexer
+    Args:
+      tokens (dict(match rules)): Hierarchical dict of states with a list of regex patterns and transitions
+      flags (int): Optional regex flags
+    '''
     self.tokens = {}
 
     # Pre-process the state definitions
@@ -19,6 +28,7 @@ class MiniLexer(object):
         action = p[1]
         new_state = p[2] if len(p) >= 3 else None
         
+        # Convert pops into an integer
         if new_state and new_state.startswith('#pop'):
           try:
             new_state = -int(new_state.split(':')[1])
@@ -30,6 +40,12 @@ class MiniLexer(object):
 
 
   def run(self, text):
+    '''Run lexer rules against a source text
+    Args:
+      text (str): Text to apply lexer to
+    Yields:
+      A sequence of lexer matches.
+    '''
     stack = ['root']
     pos = 0
 
