@@ -3,7 +3,7 @@
 # Distributed under the terms of the MIT license
 from __future__ import print_function
 
-import re, io, ast, pprint
+import re, os, io, ast, pprint
 from minilexer import MiniLexer
 
 '''VHDL documentation parser'''
@@ -395,6 +395,10 @@ def subprogram_signature(vo, fullname=None):
 
 
 
+def is_vhdl(fname):
+  return os.path.splitext(fname)[1].lower() in ('.vhdl', '.vhd')
+
+
 
 class VhdlExtractor(object):
   '''Utility class that caches parsed objects and tracks array type definitions'''
@@ -479,5 +483,6 @@ class VhdlExtractor(object):
 
   def register_files_array_types(self, files):
     for fname in files:
-      self.register_array_types(self.extract_file_objects(fname))
+      if is_vhdl(fname):
+        self.register_array_types(self.extract_file_objects(fname))
 
