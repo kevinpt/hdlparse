@@ -3,7 +3,8 @@
 # Distributed under the terms of the MIT license
 from __future__ import print_function
 
-import re, os, io, ast, pprint
+import re, os, io, ast
+from pprint import pprint
 from minilexer import MiniLexer
 
 '''VHDL documentation parser'''
@@ -15,6 +16,9 @@ vhdl_tokens = {
     (r'procedure\s+(\w+)\s*\(', 'procedure', 'param_list'),
     (r'function\s+(\w+)', 'function', 'simple_func'),
     (r'component\s+(\w+)\s*is', 'component', 'component'),
+    (r'subtype\s+(\w+)\s+is\s+(\w+)', 'subtype'),
+    (r'type\s+(\w+)\s*is', 'type', 'type_decl'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'package': [
@@ -27,6 +31,7 @@ vhdl_tokens = {
     (r'type\s+(\w+)\s*is', 'type', 'type_decl'),
     (r'end\s+package', None, '#pop'),
     (r'--#+(.*)\n', 'metacomment'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'type_decl': [
@@ -37,12 +42,14 @@ vhdl_tokens = {
     (r'range', 'range_type', '#pop'),
     (r'\(', 'enum_type', '#pop'),
     (r';', 'incomplete_type', '#pop'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'param_list': [
     (r'\s*((?:variable|signal|constant|file)\s+)?(\w+)\s*', 'param'),
     (r'\s*,\s*', None),
     (r'\s*:\s*', None, 'param_type'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'param_type': [
@@ -51,17 +58,20 @@ vhdl_tokens = {
     (r"\s*:=\s*('.'|[^\s;)]+)", 'param_default'),
     (r'\)\s*(?:return\s+(\w+)\s*)?;', 'end_subprogram', '#pop:2'),
     (r'\)\s*(?:return\s+(\w+)\s*)?is', None, '#pop:2'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'simple_func': [
     (r'\s+return\s+(\w+)\s*;', 'end_subprogram', '#pop'),
     (r'\s+return\s+(\w+)\s+is', None, '#pop'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'component': [
     (r'generic\s*\(', None, 'generic_list'),
     (r'port\s*\(', None, 'port_list'),
     (r'end\s+component\s*;', 'end_component', '#pop'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'generic_list': [
@@ -69,6 +79,7 @@ vhdl_tokens = {
     (r'\s*,\s*', None),
     (r'\s*:\s*', None, 'generic_param_type'),
     (r'--#+(.*)\n', 'metacomment'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'generic_param_type': [
@@ -77,6 +88,7 @@ vhdl_tokens = {
     (r"\s*:=\s*([\w']+)", 'generic_param_default'),
     (r'\)\s*;', 'end_generic', '#pop:2'),
     (r'--#+(.*)\n', 'metacomment'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'port_list': [
@@ -85,6 +97,7 @@ vhdl_tokens = {
     (r'\s*:\s*', None, 'port_param_type'),
     (r'--#\s*{{(.*)}}\n', 'section_meta'),
     (r'--#+(.*)\n', 'metacomment'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'port_param_type': [
@@ -94,6 +107,7 @@ vhdl_tokens = {
     (r"\s*:=\s*([\w']+)", 'port_param_default'),
     (r'\)\s*;', 'end_port', '#pop:2'),
     (r'--#+(.*)\n', 'metacomment'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'array_range': [
@@ -103,7 +117,10 @@ vhdl_tokens = {
   'nested_parens': [
     (r'\(', 'open_paren', 'nested_parens'),
     (r'\)', 'close_paren', '#pop'),
-  ]
+  ],
+  'block_comment': [
+    (r'\*/', 'end_comment', '#pop'),
+  ],
 }
       
 VhdlLexer = MiniLexer(vhdl_tokens)
@@ -438,6 +455,10 @@ class VhdlExtractor(object):
 
   def is_array(self, data_type):
     '''Check if a type is a known array type'''
+
+    # Split off any brackets
+    data_type = data_type.split('[')[0].strip()
+
     return data_type.lower() in self.array_types
 
     
