@@ -208,6 +208,11 @@ class VhdlComponent(VhdlObject):
   def __repr__(self):
     return "VhdlComponent('{}')".format(self.name)
 
+  def dump(self):
+    print('VHDL component: {}'.format(self.name))
+    for p in self.ports:
+      print('\t{} ({}), {} ({})'.format(p.name, type(p.name), p.data_type, type(p.data_type)))
+
 
 def parse_vhdl_file(fname):
   with open(fname, 'rt') as fh:
