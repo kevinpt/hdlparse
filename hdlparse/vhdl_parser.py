@@ -127,12 +127,14 @@ VhdlLexer = MiniLexer(vhdl_tokens)
 
 
 class VhdlObject(object):
+  '''Base class for parsed VHDL objects'''
   def __init__(self, name, desc=None):
     self.name = name
     self.kind = 'unknown'
     self.desc = desc
 
 class VhdlParameter(object):
+  '''Parameter to subprocs, ports, and generics'''
   def __init__(self, name, mode=None, data_type=None, default_value=None, desc=None):
     self.name = name
     self.mode = mode
@@ -153,11 +155,13 @@ class VhdlParameter(object):
     return "VhdlParameter('{}')".format(self.name)
 
 class VhdlPackage(VhdlObject):
+  '''Package declaration'''
   def __init__(self, name, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'package'
 
 class VhdlType(VhdlObject):
+  '''Type definition'''
   def __init__(self, name, type_of, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'type'
@@ -167,6 +171,7 @@ class VhdlType(VhdlObject):
 
 
 class VhdlSubtype(VhdlObject):
+  '''Subtype definition'''
   def __init__(self, name, base_type, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'subtype'
@@ -176,6 +181,7 @@ class VhdlSubtype(VhdlObject):
 
 
 class VhdlConstant(VhdlObject):
+  '''Constant definition'''
   def __init__(self, name, base_type, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'constant'
@@ -185,6 +191,7 @@ class VhdlConstant(VhdlObject):
 
 
 class VhdlFunction(VhdlObject):
+  '''Function declaration'''
   def __init__(self, name, parameters, return_type=None, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'function'
@@ -192,6 +199,7 @@ class VhdlFunction(VhdlObject):
     self.return_type = return_type
 
 class VhdlProcedure(VhdlObject):
+  '''Procedure declaration'''
   def __init__(self, name, parameters, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'procedure'
@@ -199,6 +207,7 @@ class VhdlProcedure(VhdlObject):
 
 
 class VhdlComponent(VhdlObject):
+  '''Component declaration'''
   def __init__(self, name, ports, generics=None, sections=None, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'component'
@@ -215,11 +224,13 @@ class VhdlComponent(VhdlObject):
 
 
 def parse_vhdl_file(fname):
+  '''Parse a named VHDL file'''
   with open(fname, 'rt') as fh:
     text = fh.read()
   return parse_vhdl(text)
 
 def parse_vhdl(text):
+  '''Parse a text buffer of VHDL code'''
   lex = VhdlLexer
   
   name = None
@@ -239,8 +250,6 @@ def parse_vhdl(text):
 
   objects = []
   
-  #print('## PARSE VHDL:', text)
-
   for pos, action, groups in lex.run(text):
     if action == 'metacomment':
       if last_item is None:
@@ -266,24 +275,17 @@ def parse_vhdl(text):
         parameters.append(i)
       param_items = []
 
-      #param_items.append(groups[1])
       param_items.append(VhdlParameter(groups[1]))
     elif action == 'param_type':
       mode, ptype = groups
-      
-      #if mode is None:
-      #  mode = 'in'
       
       if mode is not None:
         mode = mode.strip()
       
       for i in param_items:
-        #parameters.append(VhdlParameter(i, mode, ptype))
         i.mode = mode
         i.data_type = ptype
-      #param_items = []
     elif action == 'param_default':
-      #print('## DEFAULT:', name, groups[0])
       for i in param_items:
         i.default_value = groups[0]
 
@@ -304,6 +306,7 @@ def parse_vhdl(text):
       param_items = []
       kind = None
       name = None
+
     elif action == 'component':
       kind = 'component'
       name = groups[0]
@@ -312,8 +315,10 @@ def parse_vhdl(text):
       param_items = []
       sections = []
       port_param_index = 0
+
     elif action == 'generic_param':
       param_items.append(groups[0])
+
     elif action == 'generic_param_type':
       ptype = groups[0]
       
@@ -321,16 +326,17 @@ def parse_vhdl(text):
         generics.append(VhdlParameter(i, 'in', ptype))
       param_items = []
       last_item = generics[-1]
-      
+
     elif action == 'port_param':
       param_items.append(groups[0])
       port_param_index += 1
+
     elif action == 'port_param_type':
       mode, ptype = groups
 
       for i in param_items:
         ports.append(VhdlParameter(i, mode, ptype))
-        
+
       param_items = []
       last_item = ports[-1]
 
@@ -352,11 +358,12 @@ def parse_vhdl(text):
       objects.append(vobj)
       last_item = None
       metacomments = []
-      
+
     elif action == 'package':
       objects.append(VhdlPackage(groups[0]))
       kind = None
       name = None
+
     elif action == 'type':
       saved_type = groups[0]
 
@@ -366,19 +373,20 @@ def parse_vhdl(text):
       kind = None
       name = None
       metacomments = []
+
     elif action == 'subtype':
       vobj = VhdlSubtype(groups[0], groups[1], metacomments)
       objects.append(vobj)
       kind = None
       name = None
       metacomments = []
+
     elif action == 'constant':
       vobj = VhdlConstant(groups[0], groups[1], metacomments)
       objects.append(vobj)
       kind = None
       name = None
       metacomments = []
-
 
   return objects
 
@@ -387,22 +395,21 @@ def subprogram_prototype(vo):
   '''Generate a canonical prototype string'''
 
   plist = '; '.join(str(p) for p in vo.parameters)
-  
+
   if isinstance(vo, VhdlFunction):
     if len(vo.parameters) > 0:
       proto = 'function {}({}) return {};'.format(vo.name, plist, vo.return_type)
     else:
       proto = 'function {} return {};'.format(vo.name, vo.return_type)
-    
+
   else: # procedure
     proto = 'procedure {}({});'.format(vo.name, plist)
-  
-  #print('## PROTO:', proto)
+
   return proto
 
 def subprogram_signature(vo, fullname=None):
   '''Generate a signature string'''
-  
+
   if fullname is None:
     fullname = vo.name
 
@@ -416,10 +423,9 @@ def subprogram_signature(vo, fullname=None):
   return sig
 
 
-
 def is_vhdl(fname):
+  '''Identify file as VHDL by its extension'''
   return os.path.splitext(fname)[1].lower() in ('.vhdl', '.vhd')
-
 
 
 class VhdlExtractor(object):
@@ -431,8 +437,8 @@ class VhdlExtractor(object):
     self.array_types |= array_types
     self.object_cache = {}
 
-    
   def extract_file_objects(self, fname):
+    '''Extract objects from a source file'''
     objects = []
     if fname in self.object_cache:
       objects = self.object_cache[fname]
@@ -447,11 +453,13 @@ class VhdlExtractor(object):
 
 
   def extract_file_components(self, fname):
+    '''Extract component declarations'''
     objects = self.extract_file_objects(fname)
     comps = [o for o in objects if isinstance(o, VhdlComponent)]
     return comps
 
   def extract_components(self, text):
+    '''Extract component declarations from a text buffer'''
     objects = parse_vhdl(text)
     self.register_array_types(objects)
     comps = [o for o in objects if isinstance(o, VhdlComponent)]
@@ -466,25 +474,25 @@ class VhdlExtractor(object):
 
     return data_type.lower() in self.array_types
 
-    
+
   def add_array_types(self, type_defs):
     '''Add array data types to internal registry'''
     if 'arrays' in type_defs:
       self.array_types |= set(type_defs['arrays'])
-      
+
   def load_array_types(self, fname):
     '''Load file of previously extracted data types'''
     type_defs = ''
     with open(fname, 'rt') as fh:
       type_defs = fh.read()
-    
+
     try:
       type_defs = ast.literal_eval(type_defs)
     except SyntaxError:
       type_defs = {}
-      
+
     self.add_array_types(type_defs)
-      
+
   def save_array_types(self, fname):
     '''Save array type registry to a file'''
     type_defs = {'arrays': sorted(list(self.array_types))}
@@ -492,7 +500,7 @@ class VhdlExtractor(object):
       pprint(type_defs, stream=fh)
 
   def register_array_types(self, objects):
-  
+    '''Add array type definitions to internal registry'''
     # Add all array types directly
     types = [o for o in objects if isinstance(o, VhdlType) and o.type_of == 'array_type']
     for t in types:
@@ -508,6 +516,7 @@ class VhdlExtractor(object):
         self.array_types.add(k)
 
   def register_files_array_types(self, files):
+    '''Add array type definitions from a file list to internal registry'''
     for fname in files:
       if is_vhdl(fname):
         self.register_array_types(self.extract_file_objects(fname))

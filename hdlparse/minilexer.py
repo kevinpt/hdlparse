@@ -7,7 +7,7 @@ import re
 
 '''Minimalistic lexer engine inspired by the PyPigments RegexLexer'''
 
-__version__ = '0.9'
+__version__ = '1.0'
 
 class MiniLexer(object):
   '''Simple lexer state machine with regex matching rules'''
@@ -27,14 +27,14 @@ class MiniLexer(object):
         pat = re.compile(p[0], flags)
         action = p[1]
         new_state = p[2] if len(p) >= 3 else None
-        
+
         # Convert pops into an integer
         if new_state and new_state.startswith('#pop'):
           try:
             new_state = -int(new_state.split(':')[1])
           except IndexError, ValueError:
             new_state = -1
-        
+
         full_patterns.append((pat, action, new_state))
       self.tokens[state] = full_patterns
 
@@ -52,7 +52,6 @@ class MiniLexer(object):
     patterns = self.tokens[stack[-1]]
 
     while True:
-      #print('## pos', pos, text[pos:pos+20])
       for pat, action, new_state in patterns:
         m = pat.match(text, pos)
         if m:
@@ -60,7 +59,6 @@ class MiniLexer(object):
             #print('## MATCH: {} -> {}'.format(m.group(), action))
             yield (pos, m.end()-1), action, m.groups()
 
-          #print('## update pos', m.end())
           pos = m.end()
 
           if new_state:

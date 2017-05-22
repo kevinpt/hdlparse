@@ -42,16 +42,18 @@ verilog_tokens = {
   ],
 }
 
-      
+
 VerilogLexer = MiniLexer(verilog_tokens)
 
 class VerilogObject(object):
+  '''Base class for parsed Verilog objects'''
   def __init__(self, name, desc=None):
     self.name = name
     self.kind = 'unknown'
     self.desc = desc
 
 class VerilogParameter(object):
+  '''Parameter and port to a module'''
   def __init__(self, name, mode=None, data_type=None, default_value=None, desc=None):
     self.name = name
     self.mode = mode
@@ -72,6 +74,7 @@ class VerilogParameter(object):
     return "VerilogParameter('{}')".format(self.name)
 
 class VerilogModule(VerilogObject):
+  '''Module definition'''
   def __init__(self, name, ports, generics=None, sections=None, desc=None):
     VerilogObject.__init__(self, name, desc)
     self.kind = 'module'
@@ -85,13 +88,15 @@ class VerilogModule(VerilogObject):
 
 
 def parse_verilog_file(fname):
+  '''Parse a named Verilog file'''
   with open(fname, 'rt') as fh:
     text = fh.read()
   return parse_verilog(text)
 
 def parse_verilog(text):
+  '''Parse a text buffer of Verilog code'''
   lex = VerilogLexer
-  
+
   name = None
   kind = None
   saved_type = None
@@ -110,8 +115,6 @@ def parse_verilog(text):
   array_range_start_pos = 0
 
   objects = []
-  
-  #print('## PARSE VERILOG:', text)
 
   for pos, action, groups in lex.run(text):
     if action == 'metacomment':
@@ -119,35 +122,9 @@ def parse_verilog(text):
         metacomments.append(groups[0])
       else:
         last_item.desc = groups[0]
+
     if action == 'section_meta':
       sections.append((port_param_index, groups[0]))
-
-#    elif action == 'param':
-#      # Complete previous parameters
-#      for i in param_items:
-#        parameters.append(i)
-#      param_items = []
-
-#      #param_items.append(groups[1])
-#      param_items.append(VhdlParameter(groups[1]))
-#    elif action == 'param_type':
-#      mode, ptype = groups
-#      
-#      #if mode is None:
-#      #  mode = 'in'
-#      
-#      if mode is not None:
-#        mode = mode.strip()
-#      
-#      for i in param_items:
-#        #parameters.append(VhdlParameter(i, mode, ptype))
-#        i.mode = mode
-#        i.data_type = ptype
-#      #param_items = []
-#    elif action == 'param_default':
-#      #print('## DEFAULT:', name, groups[0])
-#      for i in param_items:
-#        i.default_value = groups[0]
 
     elif action == 'module':
       kind = 'module'
@@ -157,16 +134,7 @@ def parse_verilog(text):
       param_items = []
       sections = []
       port_param_index = 0
-#    elif action == 'generic_param':
-#      param_items.append(groups[0])
-#    elif action == 'generic_param_type':
-#      ptype = groups[0]
-#      
-#      for i in param_items:
-#        generics.append(VhdlParameter(i, 'in', ptype))
-#      param_items = []
-#      last_item = generics[-1]
-      
+
     elif action == 'parameter_start':
       net_type, vec_range = groups
 
@@ -176,15 +144,13 @@ def parse_verilog(text):
 
       if vec_range is not None:
         new_ptype += ' ' + vec_range
-        
+
       ptype = new_ptype
 
-      
     elif action == 'param_item':
       generics.append(VerilogParameter(groups[0], 'in', ptype))
 
     elif action == 'module_port_start':
-      #print('## MOD PORT START:', groups)
       new_mode, net_type, signed, vec_range = groups
 
       new_ptype = ''
@@ -197,22 +163,19 @@ def parse_verilog(text):
       if vec_range is not None:
         new_ptype += ' ' + vec_range
 
-
       # Complete pending items
       for i in param_items:
         ports[i] = VerilogParameter(i, mode, ptype)
-        
+
       param_items = []
       if len(ports) > 0:
         last_item = next(reversed(ports))
-      
+
       # Start with new mode
       mode = new_mode
       ptype = new_ptype
 
-
     elif action == 'port_param':
-      #print('## PARAM:', groups)
       ident = groups[0]
 
       param_items.append(ident)
@@ -222,9 +185,7 @@ def parse_verilog(text):
       # Finish any pending ports
       for i in param_items:
         ports[i] = VerilogParameter(i, mode, ptype)
-        #ports.append(VerilogParameter(i, mode, ptype))
 
-      #print('## END MOD:', name)
       vobj = VerilogModule(name, ports.values(), generics, dict(sections), metacomments)
       objects.append(vobj)
       last_item = None
@@ -233,8 +194,8 @@ def parse_verilog(text):
   return objects
 
 
-
 def is_verilog(fname):
+  '''Identify file as Verilog by its extension'''
   return os.path.splitext(fname)[1].lower() in ('.vlog', '.v')
 
 
@@ -244,6 +205,7 @@ class VerilogExtractor(object):
     self.object_cache = {}
 
   def extract_file_objects(self, fname):
+    '''Extract objects from a source file'''
     objects = []
     if fname in self.object_cache:
       objects = self.object_cache[fname]
@@ -256,11 +218,13 @@ class VerilogExtractor(object):
     return objects
 
   def extract_file_modules(self, fname):
+    '''Extract module declarations'''
     objects = self.extract_file_objects(fname)
     comps = [o for o in objects if isinstance(o, VerilogModule)]
     return comps
 
   def extract_modules(self, text):
+    '''Extract module declarations from a text buffer'''
     objects = parse_verilog(text)
     comps = [o for o in objects if isinstance(o, VerilogModule)]
     return comps
