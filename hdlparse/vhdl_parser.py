@@ -12,10 +12,13 @@ from minilexer import MiniLexer
 vhdl_tokens = {
   'root': [
     (r'package\s+(\w+)\s+is', 'package', 'package'),
+    (r'package\s+body\s+(\w+)\s+is', 'package_body', 'package_body'),
     (r'function\s+(\w+|"[^"]+")\s*\(', 'function', 'param_list'),
     (r'procedure\s+(\w+)\s*\(', 'procedure', 'param_list'),
     (r'function\s+(\w+)', 'function', 'simple_func'),
     (r'component\s+(\w+)\s*is', 'component', 'component'),
+    (r'entity\s+(\w+)\s*is', 'entity', 'entity'),
+    (r'architecture\s+(\w+)\s*of', 'architecture', 'architecture'),
     (r'subtype\s+(\w+)\s+is\s+(\w+)', 'subtype'),
     (r'type\s+(\w+)\s*is', 'type', 'type_decl'),
     (r'/\*', 'block_comment', 'block_comment'),
@@ -30,6 +33,12 @@ vhdl_tokens = {
     (r'constant\s+(\w+)\s+:\s+(\w+)', 'constant'),
     (r'type\s+(\w+)\s*is', 'type', 'type_decl'),
     (r'end\s+package', None, '#pop'),
+    (r'--#+(.*)\n', 'metacomment'),
+    (r'/\*', 'block_comment', 'block_comment'),
+    (r'--.*\n', None),
+  ],
+  'package_body': [
+    (r'end\s+package\s+body', None, '#pop'),
     (r'--#+(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
@@ -71,6 +80,16 @@ vhdl_tokens = {
     (r'generic\s*\(', None, 'generic_list'),
     (r'port\s*\(', None, 'port_list'),
     (r'end\s+component\s*;', 'end_component', '#pop'),
+    (r'/\*', 'block_comment', 'block_comment'),
+    (r'--.*\n', None),
+  ],
+  'entity': [
+    (r'end\s+entity\s*;', 'end_entity', '#pop'),
+    (r'/\*', 'block_comment', 'block_comment'),
+    (r'--.*\n', None),
+  ],
+  'architecture': [
+    (r'end\s+architecture\s*;', 'end_arch', '#pop'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
@@ -152,7 +171,7 @@ class VhdlParameter(object):
     return param
       
   def __repr__(self):
-    return "VhdlParameter('{}')".format(self.name)
+    return "VhdlParameter('{}', '{}', '{}')".format(self.name, self.mode, self.data_type)
 
 class VhdlPackage(VhdlObject):
   '''Package declaration'''
@@ -198,12 +217,19 @@ class VhdlFunction(VhdlObject):
     self.parameters = parameters
     self.return_type = return_type
 
+  def __repr__(self):
+    return "VhdlFunction('{}')".format(self.name)
+
+
 class VhdlProcedure(VhdlObject):
   '''Procedure declaration'''
   def __init__(self, name, parameters, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'procedure'
     self.parameters = parameters
+
+  def __repr__(self):
+    return "VhdlProcedure('{}')".format(self.name)
 
 
 class VhdlComponent(VhdlObject):
@@ -214,6 +240,7 @@ class VhdlComponent(VhdlObject):
     self.generics = generics if generics is not None else []
     self.ports = ports
     self.sections = sections if sections is not None else {}
+
   def __repr__(self):
     return "VhdlComponent('{}')".format(self.name)
 
@@ -236,6 +263,7 @@ def parse_vhdl(text):
   name = None
   kind = None
   saved_type = None
+  end_param_group = False
 
   metacomments = []
   parameters = []
@@ -270,10 +298,12 @@ def parse_vhdl(text):
       param_items = []
       parameters = []
     elif action == 'param':
-      # Complete previous parameters
-      for i in param_items:
-        parameters.append(i)
-      param_items = []
+      if end_param_group:
+        # Complete previous parameters
+        for i in param_items:
+          parameters.append(i)
+        param_items = []
+        end_param_group = False
 
       param_items.append(VhdlParameter(groups[1]))
     elif action == 'param_type':
@@ -282,9 +312,12 @@ def parse_vhdl(text):
       if mode is not None:
         mode = mode.strip()
       
-      for i in param_items:
+      for i in param_items: # Set mode and type for all pending parameters
         i.mode = mode
         i.data_type = ptype
+
+      end_param_group = True
+
     elif action == 'param_default':
       for i in param_items:
         i.default_value = groups[0]
@@ -451,6 +484,12 @@ class VhdlExtractor(object):
 
     return objects
 
+  def extract_objects(self, text):
+    '''Extract object declarations from a text buffer'''
+    objects = parse_vhdl(text)
+    self.register_array_types(objects)
+    return objects
+
 
   def extract_file_components(self, fname):
     '''Extract component declarations'''
@@ -460,9 +499,7 @@ class VhdlExtractor(object):
 
   def extract_components(self, text):
     '''Extract component declarations from a text buffer'''
-    objects = parse_vhdl(text)
-    self.register_array_types(objects)
-    comps = [o for o in objects if isinstance(o, VhdlComponent)]
+    comps = [o for o in self.extract_objects(text) if isinstance(o, VhdlComponent)]
     return comps
   
 
@@ -521,3 +558,37 @@ class VhdlExtractor(object):
       if is_vhdl(fname):
         self.register_array_types(self.extract_file_objects(fname))
 
+
+if __name__ == '__main__':
+  ve = VhdlExtractor()
+  code = '''
+package foo is
+  function afunc(q,w,e : std_ulogic; h,j,k : unsigned) return std_ulogic;
+
+  procedure aproc( r,t,y : in std_ulogic; u,i,o : out signed);
+
+  component acomp is
+    port (
+      a,b,c : in std_ulogic;
+      f,g,h : inout bit
+    );
+  end component;
+
+end package;
+  '''
+
+  objs = ve.extract_objects(code)
+
+  for o in objs:
+    print(o.name)
+    try:
+      for p in o.parameters:
+        print(p)
+    except:
+      pass
+
+    try:
+      for p in o.ports:
+        print(p)
+    except:
+      pass
