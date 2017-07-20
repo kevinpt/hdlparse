@@ -33,13 +33,13 @@ vhdl_tokens = {
     (r'constant\s+(\w+)\s+:\s+(\w+)', 'constant'),
     (r'type\s+(\w+)\s*is', 'type', 'type_decl'),
     (r'end\s+package', None, '#pop'),
-    (r'--#+(.*)\n', 'metacomment'),
+    (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'package_body': [
     (r'end\s+package\s+body', None, '#pop'),
-    (r'--#+(.*)\n', 'metacomment'),
+    (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
@@ -97,7 +97,7 @@ vhdl_tokens = {
     (r'\s*(\w+)\s*', 'generic_param'),
     (r'\s*,\s*', None),
     (r'\s*:\s*', None, 'generic_param_type'),
-    (r'--#+(.*)\n', 'metacomment'),
+    (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
@@ -106,7 +106,7 @@ vhdl_tokens = {
     (r'\s*;\s*', None, '#pop'),
     (r"\s*:=\s*([\w']+)", 'generic_param_default'),
     (r'\)\s*;', 'end_generic', '#pop:2'),
-    (r'--#+(.*)\n', 'metacomment'),
+    (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
@@ -115,7 +115,7 @@ vhdl_tokens = {
     (r'\s*,\s*', None),
     (r'\s*:\s*', None, 'port_param_type'),
     (r'--#\s*{{(.*)}}\n', 'section_meta'),
-    (r'--#+(.*)\n', 'metacomment'),
+    (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
@@ -125,7 +125,7 @@ vhdl_tokens = {
     (r'\s*;\s*', None, '#pop'),
     (r"\s*:=\s*([\w']+)", 'port_param_default'),
     (r'\)\s*;', 'end_port', '#pop:2'),
-    (r'--#+(.*)\n', 'metacomment'),
+    (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
@@ -181,9 +181,10 @@ class VhdlPackage(VhdlObject):
 
 class VhdlType(VhdlObject):
   '''Type definition'''
-  def __init__(self, name, type_of, desc=None):
+  def __init__(self, name, package, type_of, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'type'
+    self.package = package
     self.type_of = type_of
   def __repr__(self):
     return "VhdlType('{}', '{}')".format(self.name, self.type_of)
@@ -191,9 +192,10 @@ class VhdlType(VhdlObject):
 
 class VhdlSubtype(VhdlObject):
   '''Subtype definition'''
-  def __init__(self, name, base_type, desc=None):
+  def __init__(self, name, package, base_type, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'subtype'
+    self.package = package
     self.base_type = base_type
   def __repr__(self):
     return "VhdlSubtype('{}', '{}')".format(self.name, self.base_type)
@@ -201,9 +203,10 @@ class VhdlSubtype(VhdlObject):
 
 class VhdlConstant(VhdlObject):
   '''Constant definition'''
-  def __init__(self, name, base_type, desc=None):
+  def __init__(self, name, package, base_type, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'constant'
+    self.package = package
     self.base_type = base_type
   def __repr__(self):
     return "VhdlConstant('{}', '{}')".format(self.name, self.base_type)
@@ -211,9 +214,10 @@ class VhdlConstant(VhdlObject):
 
 class VhdlFunction(VhdlObject):
   '''Function declaration'''
-  def __init__(self, name, parameters, return_type=None, desc=None):
+  def __init__(self, name, package, parameters, return_type=None, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'function'
+    self.package = package
     self.parameters = parameters
     self.return_type = return_type
 
@@ -223,9 +227,10 @@ class VhdlFunction(VhdlObject):
 
 class VhdlProcedure(VhdlObject):
   '''Procedure declaration'''
-  def __init__(self, name, parameters, desc=None):
+  def __init__(self, name, package, parameters, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'procedure'
+    self.package = package
     self.parameters = parameters
 
   def __repr__(self):
@@ -234,9 +239,10 @@ class VhdlProcedure(VhdlObject):
 
 class VhdlComponent(VhdlObject):
   '''Component declaration'''
-  def __init__(self, name, ports, generics=None, sections=None, desc=None):
+  def __init__(self, name, package, ports, generics=None, sections=None, desc=None):
     VhdlObject.__init__(self, name, desc)
     self.kind = 'component'
+    self.package = package
     self.generics = generics if generics is not None else []
     self.ports = ports
     self.sections = sections if sections is not None else {}
@@ -264,6 +270,7 @@ def parse_vhdl(text):
   kind = None
   saved_type = None
   end_param_group = False
+  cur_package = None
 
   metacomments = []
   parameters = []
@@ -280,10 +287,11 @@ def parse_vhdl(text):
   
   for pos, action, groups in lex.run(text):
     if action == 'metacomment':
+      realigned = re.sub(r'^#+', lambda m: ' ' * len(m.group(0)), groups[0])
       if last_item is None:
-        metacomments.append(groups[0])
+        metacomments.append(realigned)
       else:
-        last_item.desc = groups[0]
+        last_item.desc = realigned
     if action == 'section_meta':
       sections.append((port_param_index, groups[0]))
 
@@ -328,9 +336,9 @@ def parse_vhdl(text):
         parameters.append(i)
         
       if kind == 'function':
-        vobj = VhdlFunction(name, parameters, groups[0], metacomments)
+        vobj = VhdlFunction(name, cur_package, parameters, groups[0], metacomments)
       else:
-        vobj = VhdlProcedure(name, parameters, metacomments)
+        vobj = VhdlProcedure(name, cur_package, parameters, metacomments)
       
       objects.append(vobj)
     
@@ -387,13 +395,14 @@ def parse_vhdl(text):
       last_item = ports[-1]
 
     elif action == 'end_component':
-      vobj = VhdlComponent(name, ports, generics, dict(sections), metacomments)
+      vobj = VhdlComponent(name, cur_package, ports, generics, dict(sections), metacomments)
       objects.append(vobj)
       last_item = None
       metacomments = []
 
     elif action == 'package':
       objects.append(VhdlPackage(groups[0]))
+      cur_package = groups[0]
       kind = None
       name = None
 
@@ -401,21 +410,21 @@ def parse_vhdl(text):
       saved_type = groups[0]
 
     elif action in ('array_type', 'file_type', 'access_type', 'record_type', 'range_type', 'enum_type', 'incomplete_type'):
-      vobj = VhdlType(saved_type, action, metacomments)
+      vobj = VhdlType(saved_type, cur_package, action, metacomments)
       objects.append(vobj)
       kind = None
       name = None
       metacomments = []
 
     elif action == 'subtype':
-      vobj = VhdlSubtype(groups[0], groups[1], metacomments)
+      vobj = VhdlSubtype(groups[0], cur_package, groups[1], metacomments)
       objects.append(vobj)
       kind = None
       name = None
       metacomments = []
 
     elif action == 'constant':
-      vobj = VhdlConstant(groups[0], groups[1], metacomments)
+      vobj = VhdlConstant(groups[0], cur_package, groups[1], metacomments)
       objects.append(vobj)
       kind = None
       name = None
