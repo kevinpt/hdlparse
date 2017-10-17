@@ -1,0 +1,822 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>hdlparse package &#8212; Hdlparse 1.0.3 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/project.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/tty/tty-player.min.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="hdlparse" href="modules.html" />
+
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+<script src="_static/tty/webcomponents-lite.min.js"></script>
+<script src="_static/tty/term.min.js"></script>
+<script src="_static/tty/tty-player.min.js"></script>
+
+<style>
+	.terminal-cursor {
+		color: #000;
+		background: green;
+	}
+	.terminal, .title {
+		font-size:x-small;
+	}
+</style>
+
+
+  </head>
+  <body>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="hdlparse-package">
+<h1>hdlparse package<a class="headerlink" href="#hdlparse-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-hdlparse.minilexer">
+<span id="hdlparse-minilexer-module"></span><h2>hdlparse.minilexer module<a class="headerlink" href="#module-hdlparse.minilexer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="hdlparse.minilexer.MiniLexer">
+<em class="property">class </em><code class="descclassname">hdlparse.minilexer.</code><code class="descname">MiniLexer</code><span class="sig-paren">(</span><em>tokens</em>, <em>flags=8</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.minilexer.MiniLexer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Simple lexer state machine with regex matching rules</p>
+<dl class="method">
+<dt id="hdlparse.minilexer.MiniLexer.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.minilexer.MiniLexer.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run lexer rules against a source text</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – Text to apply lexer to</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body">A sequence of lexer matches.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-hdlparse.verilog_parser">
+<span id="hdlparse-verilog-parser-module"></span><h2>hdlparse.verilog_parser module<a class="headerlink" href="#module-hdlparse.verilog_parser" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="hdlparse.verilog_parser.VerilogExtractor">
+<em class="property">class </em><code class="descclassname">hdlparse.verilog_parser.</code><code class="descname">VerilogExtractor</code><a class="headerlink" href="#hdlparse.verilog_parser.VerilogExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Utility class that caches parsed objects</p>
+<dl class="method">
+<dt id="hdlparse.verilog_parser.VerilogExtractor.extract_file_modules">
+<code class="descname">extract_file_modules</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogExtractor.extract_file_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract module declarations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – Name of file to read from</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of extracted modules.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.verilog_parser.VerilogExtractor.extract_file_objects">
+<code class="descname">extract_file_objects</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogExtractor.extract_file_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract objects from a source file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – Name of file to read from</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of objects extracted from the file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.verilog_parser.VerilogExtractor.extract_modules">
+<code class="descname">extract_modules</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogExtractor.extract_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract module declarations from a text buffer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>test</strong> (<em>str</em>) – Verilog source to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of extracted modules.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.verilog_parser.VerilogExtractor.is_array">
+<code class="descname">is_array</code><span class="sig-paren">(</span><em>data_type</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogExtractor.is_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a type is an array type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_type</strong> (<em>str</em>) – Data type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True when a data type is an array.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.verilog_parser.VerilogModule">
+<em class="property">class </em><code class="descclassname">hdlparse.verilog_parser.</code><code class="descname">VerilogModule</code><span class="sig-paren">(</span><em>name</em>, <em>ports</em>, <em>generics=None</em>, <em>sections=None</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hdlparse.verilog_parser.VerilogObject" title="hdlparse.verilog_parser.VerilogObject"><code class="xref py py-class docutils literal"><span class="pre">hdlparse.verilog_parser.VerilogObject</span></code></a></p>
+<p>Module definition</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.verilog_parser.VerilogObject">
+<em class="property">class </em><code class="descclassname">hdlparse.verilog_parser.</code><code class="descname">VerilogObject</code><span class="sig-paren">(</span><em>name</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for parsed Verilog objects</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.verilog_parser.VerilogParameter">
+<em class="property">class </em><code class="descclassname">hdlparse.verilog_parser.</code><code class="descname">VerilogParameter</code><span class="sig-paren">(</span><em>name</em>, <em>mode=None</em>, <em>data_type=None</em>, <em>default_value=None</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Parameter and port to a module</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="hdlparse.verilog_parser.is_verilog">
+<code class="descclassname">hdlparse.verilog_parser.</code><code class="descname">is_verilog</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.is_verilog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify file as Verilog by its extension</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – File name to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True when file has a Verilog extension.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hdlparse.verilog_parser.parse_verilog">
+<code class="descclassname">hdlparse.verilog_parser.</code><code class="descname">parse_verilog</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.parse_verilog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a text buffer of Verilog code</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – Source code to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of parsed objects.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hdlparse.verilog_parser.parse_verilog_file">
+<code class="descclassname">hdlparse.verilog_parser.</code><code class="descname">parse_verilog_file</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.parse_verilog_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a named Verilog file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – File to parse.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of parsed objects.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-hdlparse.vhdl_parser">
+<span id="hdlparse-vhdl-parser-module"></span><h2>hdlparse.vhdl_parser module<a class="headerlink" href="#module-hdlparse.vhdl_parser" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="hdlparse.vhdl_parser.VhdlComponent">
+<em class="property">class </em><code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">VhdlComponent</code><span class="sig-paren">(</span><em>name</em>, <em>package</em>, <em>ports</em>, <em>generics=None</em>, <em>sections=None</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlComponent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hdlparse.vhdl_parser.VhdlObject" title="hdlparse.vhdl_parser.VhdlObject"><code class="xref py py-class docutils literal"><span class="pre">hdlparse.vhdl_parser.VhdlObject</span></code></a></p>
+<p>Component declaration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the component</li>
+<li><strong>package</strong> (<em>str</em>) – Package containing the component</li>
+<li><strong>ports</strong> (<em>list of VhdlParameter</em>) – Port parameters to the component</li>
+<li><strong>generics</strong> (<em>list of VhdlParameter</em>) – Generic parameters to the component</li>
+<li><strong>sections</strong> (<em>list of str</em>) – Metacomment sections</li>
+<li><strong>desc</strong> (<em>str</em><em>, </em><em>optional</em>) – Description from object metacomments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hdlparse.vhdl_parser.VhdlComponent.dump">
+<code class="descname">dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlComponent.dump" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.vhdl_parser.VhdlConstant">
+<em class="property">class </em><code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">VhdlConstant</code><span class="sig-paren">(</span><em>name</em>, <em>package</em>, <em>base_type</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlConstant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hdlparse.vhdl_parser.VhdlObject" title="hdlparse.vhdl_parser.VhdlObject"><code class="xref py py-class docutils literal"><span class="pre">hdlparse.vhdl_parser.VhdlObject</span></code></a></p>
+<p>Constant definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the constant</li>
+<li><strong>package</strong> (<em>str</em>) – Package containing the constant</li>
+<li><strong>base_type</strong> (<em>str</em>) – Type fo the constant</li>
+<li><strong>desc</strong> (<em>str</em><em>, </em><em>optional</em>) – Description from object metacomments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.vhdl_parser.VhdlExtractor">
+<em class="property">class </em><code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">VhdlExtractor</code><span class="sig-paren">(</span><em>array_types=set([])</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Utility class that caches parsed objects and tracks array type definitions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>array_types</strong> (<em>set</em>) – Initial array types</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.add_array_types">
+<code class="descname">add_array_types</code><span class="sig-paren">(</span><em>type_defs</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.add_array_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add array data types to internal registry</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>type_defs</strong> (<em>dict</em>) – Dictionary of type definitions</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.extract_components">
+<code class="descname">extract_components</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.extract_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract component declarations from a text buffer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – Source code to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of parsed components.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.extract_file_components">
+<code class="descname">extract_file_components</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.extract_file_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract component declarations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – File name to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of parsed components.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.extract_file_objects">
+<code class="descname">extract_file_objects</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.extract_file_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract objects from a source file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – File to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of parsed objects.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.extract_objects">
+<code class="descname">extract_objects</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.extract_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract object declarations from a text buffer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – Source code to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of parsed objects.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.is_array">
+<code class="descname">is_array</code><span class="sig-paren">(</span><em>data_type</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.is_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a type is a known array type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_type</strong> (<em>str</em>) – Name of type to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if <code class="docutils literal"><span class="pre">data_type</span></code> is a known array type.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.load_array_types">
+<code class="descname">load_array_types</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.load_array_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load file of previously extracted data types</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – Name of file to load array database from</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.register_array_types">
+<code class="descname">register_array_types</code><span class="sig-paren">(</span><em>objects</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.register_array_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add array type definitions to internal registry</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>objects</strong> (<em>list of VhdlType</em><em> or </em><a class="reference internal" href="#hdlparse.vhdl_parser.VhdlSubtype" title="hdlparse.vhdl_parser.VhdlSubtype"><em>VhdlSubtype</em></a>) – Array types to track</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.register_files_array_types">
+<code class="descname">register_files_array_types</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.register_files_array_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add array type definitions from a file list to internal registry</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (<em>list of str</em>) – Files to parse for array definitions</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.save_array_types">
+<code class="descname">save_array_types</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.save_array_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save array type registry to a file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – Name of file to save array database to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.vhdl_parser.VhdlFunction">
+<em class="property">class </em><code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">VhdlFunction</code><span class="sig-paren">(</span><em>name</em>, <em>package</em>, <em>parameters</em>, <em>return_type=None</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hdlparse.vhdl_parser.VhdlObject" title="hdlparse.vhdl_parser.VhdlObject"><code class="xref py py-class docutils literal"><span class="pre">hdlparse.vhdl_parser.VhdlObject</span></code></a></p>
+<p>Function declaration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the function</li>
+<li><strong>package</strong> (<em>str</em>) – Package containing the function</li>
+<li><strong>parameters</strong> (<em>list of VhdlParameter</em>) – Parameters to the function</li>
+<li><strong>return_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of the return value</li>
+<li><strong>desc</strong> (<em>str</em><em>, </em><em>optional</em>) – Description from object metacomments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.vhdl_parser.VhdlObject">
+<em class="property">class </em><code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">VhdlObject</code><span class="sig-paren">(</span><em>name</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for parsed VHDL objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the object</li>
+<li><strong>desc</strong> (<em>str</em>) – Description from object metacomments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.vhdl_parser.VhdlPackage">
+<em class="property">class </em><code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">VhdlPackage</code><span class="sig-paren">(</span><em>name</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlPackage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hdlparse.vhdl_parser.VhdlObject" title="hdlparse.vhdl_parser.VhdlObject"><code class="xref py py-class docutils literal"><span class="pre">hdlparse.vhdl_parser.VhdlObject</span></code></a></p>
+<p>Package declaration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the package</li>
+<li><strong>desc</strong> (<em>str</em>) – Description from object metacomments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.vhdl_parser.VhdlParameter">
+<em class="property">class </em><code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">VhdlParameter</code><span class="sig-paren">(</span><em>name</em>, <em>mode=None</em>, <em>data_type=None</em>, <em>default_value=None</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Parameter to subprograms, ports, and generics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the object</li>
+<li><strong>mode</strong> (<em>str</em>) – Direction mode for the parameter</li>
+<li><strong>data_type</strong> (<em>str</em>) – Type name for the parameter</li>
+<li><strong>default_value</strong> (<em>str</em>) – Default value of the parameter</li>
+<li><strong>desc</strong> (<em>str</em>) – Description from object metacomments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.vhdl_parser.VhdlProcedure">
+<em class="property">class </em><code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">VhdlProcedure</code><span class="sig-paren">(</span><em>name</em>, <em>package</em>, <em>parameters</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlProcedure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hdlparse.vhdl_parser.VhdlObject" title="hdlparse.vhdl_parser.VhdlObject"><code class="xref py py-class docutils literal"><span class="pre">hdlparse.vhdl_parser.VhdlObject</span></code></a></p>
+<p>Procedure declaration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the procedure</li>
+<li><strong>package</strong> (<em>str</em>) – Package containing the procedure</li>
+<li><strong>parameters</strong> (<em>list of VhdlParameter</em>) – Parameters to the procedure</li>
+<li><strong>desc</strong> (<em>str</em><em>, </em><em>optional</em>) – Description from object metacomments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.vhdl_parser.VhdlSubtype">
+<em class="property">class </em><code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">VhdlSubtype</code><span class="sig-paren">(</span><em>name</em>, <em>package</em>, <em>base_type</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlSubtype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hdlparse.vhdl_parser.VhdlObject" title="hdlparse.vhdl_parser.VhdlObject"><code class="xref py py-class docutils literal"><span class="pre">hdlparse.vhdl_parser.VhdlObject</span></code></a></p>
+<p>Subtype definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the subtype</li>
+<li><strong>package</strong> (<em>str</em>) – Package containing the subtype</li>
+<li><strong>base_type</strong> (<em>str</em>) – Base type name derived from</li>
+<li><strong>desc</strong> (<em>str</em><em>, </em><em>optional</em>) – Description from object metacomments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="hdlparse.vhdl_parser.VhdlType">
+<em class="property">class </em><code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">VhdlType</code><span class="sig-paren">(</span><em>name</em>, <em>package</em>, <em>type_of</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hdlparse.vhdl_parser.VhdlObject" title="hdlparse.vhdl_parser.VhdlObject"><code class="xref py py-class docutils literal"><span class="pre">hdlparse.vhdl_parser.VhdlObject</span></code></a></p>
+<p>Type definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the type</li>
+<li><strong>package</strong> (<em>str</em>) – Package containing the type</li>
+<li><strong>type_of</strong> (<em>str</em>) – Object type of this type definition</li>
+<li><strong>desc</strong> (<em>str</em><em>, </em><em>optional</em>) – Description from object metacomments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hdlparse.vhdl_parser.is_vhdl">
+<code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">is_vhdl</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.is_vhdl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify file as VHDL by its extension</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – File name to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True when file has a VHDL extension.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hdlparse.vhdl_parser.parse_vhdl">
+<code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">parse_vhdl</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.parse_vhdl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a text buffer of VHDL code</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – Source code to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Parsed objects.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hdlparse.vhdl_parser.parse_vhdl_file">
+<code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">parse_vhdl_file</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.parse_vhdl_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a named VHDL file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – Name of file to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Parsed objects.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hdlparse.vhdl_parser.subprogram_prototype">
+<code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">subprogram_prototype</code><span class="sig-paren">(</span><em>vo</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.subprogram_prototype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a canonical prototype string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vo</strong> (<a class="reference internal" href="#hdlparse.vhdl_parser.VhdlFunction" title="hdlparse.vhdl_parser.VhdlFunction"><em>VhdlFunction</em></a><em>, </em><a class="reference internal" href="#hdlparse.vhdl_parser.VhdlProcedure" title="hdlparse.vhdl_parser.VhdlProcedure"><em>VhdlProcedure</em></a>) – Subprogram object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Prototype string.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hdlparse.vhdl_parser.subprogram_signature">
+<code class="descclassname">hdlparse.vhdl_parser.</code><code class="descname">subprogram_signature</code><span class="sig-paren">(</span><em>vo</em>, <em>fullname=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.subprogram_signature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a signature string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vo</strong> (<a class="reference internal" href="#hdlparse.vhdl_parser.VhdlFunction" title="hdlparse.vhdl_parser.VhdlFunction"><em>VhdlFunction</em></a><em>, </em><a class="reference internal" href="#hdlparse.vhdl_parser.VhdlProcedure" title="hdlparse.vhdl_parser.VhdlProcedure"><em>VhdlProcedure</em></a>) – Subprogram object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Signature string.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-hdlparse">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-hdlparse" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Hdlparse</a></h1>
+
+
+
+<p class="blurb">HDL parsing library</p>
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=kevinpt&repo=hdlparse&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">hdlparse</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">hdlparse</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">hdlparse package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-hdlparse.minilexer">hdlparse.minilexer module</a></li>
+<li><a class="reference internal" href="#module-hdlparse.verilog_parser">hdlparse.verilog_parser module</a></li>
+<li><a class="reference internal" href="#module-hdlparse.vhdl_parser">hdlparse.vhdl_parser module</a></li>
+<li><a class="reference internal" href="#module-hdlparse">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<h3>Other projects</h3>
+
+<div id="proj_list">
+<p>
+<a href="http://kevinpt.github.io/opbasm/">Opbasm</a><br>
+<a href="http://kevinpt.github.io/ripyl/">Ripyl</a><br>
+<a href="http://code.google.com/p/vertcl">Vertcl</a><br>
+<a href="http://code.google.com/p/vhdl-extras">Vhdl-extras</a><br>
+<a href="http://kevinpt.github.io/lecroy-colorizer/">Lecroy-colorizer</a>
+</p>
+</div>
+
+<script>
+$(function() { // Retrieve list of repositories from Github and dynamically insert them into sidebar
+
+if(!window.sessionStorage || !JSON) { return; } // Punt on crusty browsers (looking at you IE10)
+
+function JSONP( url, callback ) {
+	var id = ( 'jsonp' + Math.random() * new Date() ).replace('.', '');
+	var script = document.createElement('script');
+	script.src = url.replace( 'callback=?', 'callback=' + id );
+	document.body.appendChild( script );
+	window[ id ] = function( data ) {
+		if (callback) {
+			callback( data );
+		}
+	};
+}
+
+// Build dictionary indexing lower cased project names with their preferred format
+var knownProjects = ["VHDL-extras", "Ripyl", "VerTcl", "LeCroy-colorizer", "Opbasm"];
+var projectDict = {};
+$.each(knownProjects, function(index, v) {
+  projectDict[v.toLowerCase()] = v;
+});
+
+function insert_projects(projects) {
+    var links = [];
+    var cur_proj = "Hdlparse".toLowerCase();
+    
+    $.each(projects, function(key, value) {
+      if(key != cur_proj) {
+        var title;
+        if(key in projectDict) {
+          title = projectDict[key];
+        } else { // Capitalize first char
+          title = key.replace(/^./, function(match) {return match.toUpperCase()});
+        }
+        links.push("<a href='"+ value +"'>" + title + "</a>");
+      }
+    });
+    
+    $("#proj_list").html("<p>"+ links.join("<br>") +"</p>");
+}
+
+var now = new Date().getTime();
+if(sessionStorage.KTcacheTime && now - sessionStorage.KTcacheTime < 5*60*1000 ) { // Use cached values (5 min. expiry)
+  insert_projects(JSON.parse(sessionStorage.KTprojects));
+} else { // Retrieve current projects
+  JSONP("https://api.github.com/users/kevinpt/repos?type=owner&callback=?", function(response) {
+    var projects = {};
+    $.each(response.data, function(index, value) {
+      if(!value.fork)
+        projects[value.name] = value.homepage;
+    });
+    
+    insert_projects(projects);
+    
+    // Store data in session cache
+    sessionStorage.KTprojects = JSON.stringify(projects);
+    var now = new Date().getTime();
+    sessionStorage.KTcacheTime = now;
+  });  
+}
+
+});
+</script>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Kevin Thibedeau.
+      
+      |
+      <a href="../_sources/apidoc/hdlparse.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

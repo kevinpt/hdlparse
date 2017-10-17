@@ -1,0 +1,425 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Hdlparse &#8212; Hdlparse 1.0.3 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/project.css" type="text/css" />
+    <link rel="stylesheet" href="_static/tty/tty-player.min.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="hdlparse" href="apidoc/modules.html" />
+
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+<script src="_static/tty/webcomponents-lite.min.js"></script>
+<script src="_static/tty/term.min.js"></script>
+<script src="_static/tty/tty-player.min.js"></script>
+
+<style>
+	.terminal-cursor {
+		color: #000;
+		background: green;
+	}
+	.terminal, .title {
+		font-size:x-small;
+	}
+</style>
+
+
+  </head>
+  <body>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="hdlparse">
+<h1>Hdlparse<a class="headerlink" href="#hdlparse" title="Permalink to this headline">¶</a></h1>
+<p>Hdlparse is a simple package implementing a rudimentary parser for VHDL and Verilog. It is not capable of fully parsing the entire language. Rather, it is meant to extract enough key information from a source file to create generated documentation.</p>
+<p>This library is used by the <a class="reference external" href="https://github.com/kevinpt/symbolator">Symbolator</a> diagram generator.</p>
+<p>For VHDL this library can extract component, subprogram, type, subtype, and constant declarations from a package. For Verilog it can extract module declarations (both 1995 and 2001 syntax).</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>Hdlparse requires either Python 2.7 or Python 3.x and no additional libraries.</p>
+<p>The installation script depends on setuptools. The source is written in
+Python 2.7 syntax but will convert cleanly to Python 3 when the installer
+passes it through <code class="docutils literal"><span class="pre">2to3</span></code>.</p>
+</div>
+<div class="section" id="licensing">
+<h2>Licensing<a class="headerlink" href="#licensing" title="Permalink to this headline">¶</a></h2>
+<p>Opbasm and the included VHDL source is licensed for free commercial and non-commercial use under the terms of the MIT license.</p>
+</div>
+<div class="section" id="download">
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
+<p>You can access the Hdlparse Git repository from <a class="reference external" href="https://github.com/kevinpt/hdlparse">Github</a>. You can install direct from PyPI with the <code class="docutils literal"><span class="pre">pip</span></code>
+command if you have it available.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Hdlparse is a Python library. You must have Python installed first to use it. Most modern Linux distributions and OS/X have it available by default. There are a number of options available for Windows. If you don’t already have a favorite, I recommend getting one of the <a class="reference external" href="http://www.scipy.org/install.html">“full-stack” Python distros</a> that are geared toward scientific computing such as Anaconda or Python(x,y).</p>
+<p>You need to have the Python setuptools installed first. If your OS has a package manager, it may be preferable to install setuptools through that tool. Otherwise you can use Pip:</p>
+<div class="highlight-sh"><div class="highlight"><pre>&gt; pip install setuptools
+</pre></div>
+</div>
+<p>The easiest way to install Hdlparse is from <a class="reference external" href="https://pypi.python.org/pypi/hdlparse">PyPI</a>.</p>
+<div class="highlight-sh"><div class="highlight"><pre>&gt; pip install --upgrade hdlparse
+</pre></div>
+</div>
+<p>This will download and install the latest release, upgrading if you already have it installed. If you don’t have <code class="docutils literal"><span class="pre">pip</span></code> you may have the <code class="docutils literal"><span class="pre">easy_install</span></code> command available which can be used to install <code class="docutils literal"><span class="pre">pip</span></code> on your system:</p>
+<div class="highlight-sh"><div class="highlight"><pre>&gt; easy_install pip
+</pre></div>
+</div>
+<p>You can also use <code class="docutils literal"><span class="pre">pip</span></code> to get the latest development code from Github:</p>
+<div class="highlight-sh"><div class="highlight"><pre>&gt; pip install --upgrade https://github.com/kevinpt/hdlparse/tarball/master
+</pre></div>
+</div>
+<p>If you manually downloaded a source package or created a clone with Git you can install with the following command run from the base Hdlparse directory:</p>
+<div class="highlight-sh"><div class="highlight"><pre>&gt; python setup.py install
+</pre></div>
+</div>
+<p>On Linux systems you may need to install with root privileges using the <em>sudo</em> command.</p>
+<p>After a successful install the Hdlparse library will be available.</p>
+</div>
+<div class="section" id="using-hdlparse">
+<h2>Using Hdlparse<a class="headerlink" href="#using-hdlparse" title="Permalink to this headline">¶</a></h2>
+<p>The Hdlparse library has two main modules <a class="reference internal" href="apidoc/hdlparse.html#module-hdlparse.vhdl_parser" title="hdlparse.vhdl_parser"><code class="xref py py-mod docutils literal"><span class="pre">vhdl_parser</span></code></a> and <a class="reference internal" href="apidoc/hdlparse.html#module-hdlparse.verilog_parser" title="hdlparse.verilog_parser"><code class="xref py py-mod docutils literal"><span class="pre">verilog_parser</span></code></a>. You import one or both of them as needed.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">hdlparse.vhdl_parser</span> <span class="kn">as</span> <span class="nn">vhdl</span>
+<span class="kn">import</span> <span class="nn">hdlparse.verilog_parser</span> <span class="kn">as</span> <span class="nn">vlog</span>
+</pre></div>
+</div>
+<p>Within each module are extractor classes <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlExtractor" title="hdlparse.vhdl_parser.VhdlExtractor"><code class="xref py py-class docutils literal"><span class="pre">VhdlExtractor</span></code></a> and <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.verilog_parser.VerilogExtractor" title="hdlparse.verilog_parser.VerilogExtractor"><code class="xref py py-class docutils literal"><span class="pre">VerilogExtractor</span></code></a> that are the central mechanisms for using Hdlparse.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">vhdl_ex</span> <span class="o">=</span> <span class="n">vhdl</span><span class="o">.</span><span class="n">VhdlExtractor</span><span class="p">()</span>
+<span class="n">vlog_ex</span> <span class="o">=</span> <span class="n">vlog</span><span class="o">.</span><span class="n">VerilogExtractor</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Verilog extraction is relatively simple since the language doesn’t have type declarations that need to be known ahead of time to detect arrays.</p>
+<div class="section" id="verilog">
+<h3>Verilog<a class="headerlink" href="#verilog" title="Permalink to this headline">¶</a></h3>
+<p>The Verilog parser is only able to extract module definitions with a port and optional parameter list. Verilog modules are extracted using the <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.verilog_parser.VerilogExtractor.extract_modules" title="hdlparse.verilog_parser.VerilogExtractor.extract_modules"><code class="xref py py-meth docutils literal"><span class="pre">extract_modules()</span></code></a> and <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.verilog_parser.VerilogExtractor.extract_file_modules" title="hdlparse.verilog_parser.VerilogExtractor.extract_file_modules"><code class="xref py py-meth docutils literal"><span class="pre">extract_file_modules()</span></code></a> methods. The former is used when you have the code in a string. The latter when you want to read the Veirlog source from a file. When parsing a file, a cache of objects is maintained so you can repeatedly call <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.verilog_parser.VerilogExtractor.extract_file_modules" title="hdlparse.verilog_parser.VerilogExtractor.extract_file_modules"><code class="xref py py-meth docutils literal"><span class="pre">extract_file_modules()</span></code></a> without reparsing the file.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s">&#39;rt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+  <span class="n">code</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">vlog_mods</span> <span class="o">=</span> <span class="n">vlog_ex</span><span class="o">.</span><span class="n">extract_modules</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+<span class="n">vlog_mods</span> <span class="o">=</span> <span class="n">vlog_ex</span><span class="o">.</span><span class="n">extract_file_modules</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The result is a list of extracted <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.verilog_parser.VerilogModule" title="hdlparse.verilog_parser.VerilogModule"><code class="xref py py-class docutils literal"><span class="pre">VerilogModule</span></code></a> objects. Each instance of this class has <code class="docutils literal"><span class="pre">name</span></code>, <code class="docutils literal"><span class="pre">generics</span></code>, and <code class="docutils literal"><span class="pre">ports</span></code> attributes. The <code class="docutils literal"><span class="pre">name</span></code> attribute is the name of the module. The <code class="docutils literal"><span class="pre">generics</span></code> attribute is a list of extracted parameters and <code class="docutils literal"><span class="pre">ports</span></code> is a list of the ports on the module.</p>
+<div class="highlight-verilog"><div class="highlight"><pre><span class="k">module</span> <span class="n">newstyle</span> <span class="c1">// This is a new style module def</span>
+<span class="p">#(</span><span class="k">parameter</span> <span class="kt">real</span> <span class="n">foo</span> <span class="o">=</span> <span class="mh">8</span><span class="p">,</span> <span class="n">bar</span><span class="o">=</span><span class="mh">1</span><span class="p">,</span> <span class="n">baz</span><span class="o">=</span><span class="mh">2</span><span class="p">,</span>
+<span class="k">parameter</span> <span class="k">signed</span> <span class="p">[</span><span class="mh">7</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span> <span class="n">zip</span> <span class="o">=</span> <span class="mh">100</span><span class="p">)</span>
+<span class="p">(</span>
+  <span class="k">input</span> <span class="n">x</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="k">inout</span> <span class="n">y</span><span class="p">,</span> <span class="n">y2_long_output</span><span class="p">,</span>
+  <span class="k">output</span> <span class="kt">wire</span> <span class="p">[</span><span class="mh">4</span><span class="o">:</span><span class="mh">1</span><span class="p">]</span> <span class="n">z</span><span class="p">,</span> <span class="n">z2</span>
+<span class="p">);</span>
+<span class="k">endmodule</span>
+</pre></div>
+</div>
+<p>Each port and generic is an instance of <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.verilog_parser.VerilogParameter" title="hdlparse.verilog_parser.VerilogParameter"><code class="xref py py-class docutils literal"><span class="pre">VerilogParameter</span></code></a> containing the name, mode (input, output, inout), and type.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">hdlparse.verilog_parser</span> <span class="kn">as</span> <span class="nn">vlog</span>
+
+<span class="n">vlog_ex</span> <span class="o">=</span> <span class="n">vlog</span><span class="o">.</span><span class="n">VerilogExtractor</span><span class="p">()</span>
+<span class="n">vlog_mods</span> <span class="o">=</span> <span class="n">vlog_ex</span><span class="o">.</span><span class="n">extract_file_modules</span><span class="p">(</span><span class="s">&#39;example.v&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">vlog_mods</span><span class="p">:</span>
+  <span class="k">print</span><span class="p">(</span><span class="s">&#39;Module &quot;{}&quot;:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+  <span class="k">print</span><span class="p">(</span><span class="s">&#39;  Parameters:&#39;</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">generics</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">{:20}{:8}{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">data_type</span><span class="p">))</span>
+
+  <span class="k">print</span><span class="p">(</span><span class="s">&#39;  Ports:&#39;</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">ports</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">{:20}{:8}{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">data_type</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>When run against the example code produces the following:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">Module &quot;newstyle&quot;:</span>
+<span class="go">  Parameters:</span>
+<span class="go">        foo                 in      real</span>
+<span class="go">        bar                 in      real</span>
+<span class="go">        baz                 in      real</span>
+<span class="go">        zip                 in      signed [7:0]</span>
+<span class="go">  Ports:</span>
+<span class="go">        x                   input</span>
+<span class="go">        x2                  input</span>
+<span class="go">        y                   inout</span>
+<span class="go">        y2_long_output      inout</span>
+<span class="go">        z                   output  wire [4:1]</span>
+<span class="go">        z2                  output  wire [4:1]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="vhdl">
+<h3>VHDL<a class="headerlink" href="#vhdl" title="Permalink to this headline">¶</a></h3>
+<p>The VHDL parser can extract more object types than the Verilog parser. It can be used to access package definitions and component declarations,type and subtype definitions, functions, and procedures found within a package. It will not process entity declarations or nested subprograms and types.</p>
+<p>Extraction works similarly to the Verilog parser:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s">&#39;rt&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">&#39;latin-1&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+  <span class="n">code</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">vhdl_objs</span> <span class="o">=</span> <span class="n">vhdl_ex</span><span class="o">.</span><span class="n">extract_objects</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+<span class="n">vhdl_objs</span> <span class="o">=</span> <span class="n">vhdl_ex</span><span class="o">.</span><span class="n">extract_file_objects</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These will extract a list of all supported object types. The result is a list of objects subclassed from <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlObject" title="hdlparse.vhdl_parser.VhdlObject"><code class="xref py py-class docutils literal"><span class="pre">VhdlObject</span></code></a>. You can also call methods that filter this list. Repeated calls are more efficient when using the file name variants which maintain a cache of all parsed objects in the extractor.</p>
+<p>VhdlPackage
+VhdlType
+VhdlSubtype
+VhdlConstant
+VhdlFunction
+VhdlProcedure
+VhdlComponent   extract_components</p>
+<div class="highlight-vhdl"><div class="highlight"><pre><span class="k">package</span> <span class="n">example</span> <span class="k">is</span>
+  <span class="k">component</span> <span class="nc">demo</span> <span class="k">is</span>
+    <span class="k">generic</span> <span class="p">(</span>
+      <span class="n">GENERIC1</span><span class="o">:</span> <span class="kt">boolean</span> <span class="o">:=</span> <span class="n">false</span><span class="p">;</span>
+      <span class="n">GENERIC2</span><span class="o">:</span> <span class="kt">integer</span> <span class="o">:=</span> <span class="mi">100</span>
+    <span class="p">);</span>
+    <span class="k">port</span> <span class="p">(</span>
+      <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">:</span> <span class="k">in</span> <span class="kt">std_ulogic</span> <span class="o">:=</span> <span class="sc">&#39;1&#39;</span><span class="p">;</span>
+      <span class="n">c</span><span class="p">,</span> <span class="n">d</span> <span class="o">:</span> <span class="k">out</span> <span class="kt">std_ulogic_vector</span><span class="p">(</span><span class="mi">7</span> <span class="k">downto</span> <span class="mi">0</span><span class="p">);</span>
+      <span class="n">e</span><span class="p">,</span> <span class="n">f</span> <span class="o">:</span> <span class="k">inout</span> <span class="n">unsigned</span><span class="p">(</span><span class="mi">7</span> <span class="k">downto</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">);</span>
+  <span class="k">end</span> <span class="k">component</span><span class="p">;</span>
+<span class="k">end</span> <span class="k">package</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Each port and generic is an instance of <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlParameter" title="hdlparse.vhdl_parser.VhdlParameter"><code class="xref py py-class docutils literal"><span class="pre">VhdlParameter</span></code></a> containing the name, mode (input, output, inout), and type.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">hdlparse.vhdl_parser</span> <span class="kn">as</span> <span class="nn">vhdl</span>
+
+<span class="n">vhdl_ex</span> <span class="o">=</span> <span class="n">vhdl</span><span class="o">.</span><span class="n">VhdlExtractor</span><span class="p">()</span>
+<span class="n">vhdl_comps</span> <span class="o">=</span> <span class="n">vhdl_ex</span><span class="o">.</span><span class="n">extract_file_components</span><span class="p">(</span><span class="s">&#39;example.vhdl&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">vhdl_comps</span><span class="p">:</span>
+  <span class="k">print</span><span class="p">(</span><span class="s">&#39;Component &quot;{}&quot;:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+  <span class="k">print</span><span class="p">(</span><span class="s">&#39;  Generics:&#39;</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">generics</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">{:20}{:8} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">data_type</span><span class="p">))</span>
+
+  <span class="k">print</span><span class="p">(</span><span class="s">&#39;  Ports:&#39;</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">ports</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">{:20}{:8} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">data_type</span> <span class="p">))</span>
+</pre></div>
+</div>
+<p>When run against the example code produces the following:</p>
+</div>
+<div class="section" id="vhdl-arrays">
+<h3>VHDL arrays<a class="headerlink" href="#vhdl-arrays" title="Permalink to this headline">¶</a></h3>
+<p>It can be useful to know which data types are an array. The <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlExtractor" title="hdlparse.vhdl_parser.VhdlExtractor"><code class="xref py py-class docutils literal"><span class="pre">VhdlExtractor</span></code></a> class will keep track of all visited array type definitions it sees. The <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlExtractor.is_array" title="hdlparse.vhdl_parser.VhdlExtractor.is_array"><code class="xref py py-meth docutils literal"><span class="pre">is_array()</span></code></a> method lets you query the internal list to check if a type is for an array. All IEEE standard array types are supported by default. Any subtypes derived from an array type will also be considered as arrays.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">hdlparse.vhdl_parser</span> <span class="kn">as</span> <span class="nn">vhdl</span>
+
+<span class="n">vhdl_ex</span> <span class="o">=</span> <span class="n">vhdl</span><span class="o">.</span><span class="n">VhdlExtractor</span><span class="p">()</span>
+
+<span class="n">code</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">package foobar is</span>
+<span class="s">  type custom_array is array(integer range &lt;&gt;) of boolean;</span>
+<span class="s">  subtype custom_subtype is custom_array(1 to 10);</span>
+<span class="s">end package;</span>
+<span class="s">&#39;&#39;&#39;</span>
+<span class="n">vhdl_comps</span> <span class="o">=</span> <span class="n">vhdl_ex</span><span class="o">.</span><span class="n">extract_objects</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+<span class="c"># These all return true:</span>
+<span class="k">print</span><span class="p">(</span><span class="n">vhdl_ex</span><span class="o">.</span><span class="n">is_array</span><span class="p">(</span><span class="s">&#39;unsigned&#39;</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">vhdl_ex</span><span class="o">.</span><span class="n">is_array</span><span class="p">(</span><span class="s">&#39;custom_array&#39;</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">vhdl_ex</span><span class="o">.</span><span class="n">is_array</span><span class="p">(</span><span class="s">&#39;custom_subtype&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>You can manually add array definitions with the <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlExtractor.add_array_types" title="hdlparse.vhdl_parser.VhdlExtractor.add_array_types"><code class="xref py py-meth docutils literal"><span class="pre">add_array_types()</span></code></a> method. Parsed array data can be saved to a file with <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlExtractor.save_array_types" title="hdlparse.vhdl_parser.VhdlExtractor.save_array_types"><code class="xref py py-meth docutils literal"><span class="pre">save_array_types()</span></code></a> and restored with <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlExtractor.load_array_types" title="hdlparse.vhdl_parser.VhdlExtractor.load_array_types"><code class="xref py py-meth docutils literal"><span class="pre">load_array_types()</span></code></a>. This lets you parse one set of files for type definitions and use the saved info for parsing other code at a different time.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="apidoc/modules.html">hdlparse</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/hdlparse.html">hdlparse package</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Hdlparse</a></h1>
+
+
+
+<p class="blurb">HDL parsing library</p>
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=kevinpt&repo=hdlparse&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+<div id="download_links">
+  <div class="js-clone-url clone-url open" data-protocol-type="http">
+    <span>Git clone URL:</span>
+    <div>
+      <input type="text" value="https://github.com/kevinpt/hdlparse.git"
+             onclick="this.focus();this.select()" readonly="readonly" aria-label="Git clone URL">
+    </div>
+  </div>
+  <br>
+</div><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="apidoc/modules.html" title="next chapter">hdlparse</a></li>
+  </ul></li>
+</ul>
+</div>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Hdlparse</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#licensing">Licensing</a></li>
+<li><a class="reference internal" href="#download">Download</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#using-hdlparse">Using Hdlparse</a><ul>
+<li><a class="reference internal" href="#verilog">Verilog</a></li>
+<li><a class="reference internal" href="#vhdl">VHDL</a></li>
+<li><a class="reference internal" href="#vhdl-arrays">VHDL arrays</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+<h3>Other projects</h3>
+
+<div id="proj_list">
+<p>
+<a href="http://kevinpt.github.io/opbasm/">Opbasm</a><br>
+<a href="http://kevinpt.github.io/ripyl/">Ripyl</a><br>
+<a href="http://code.google.com/p/vertcl">Vertcl</a><br>
+<a href="http://code.google.com/p/vhdl-extras">Vhdl-extras</a><br>
+<a href="http://kevinpt.github.io/lecroy-colorizer/">Lecroy-colorizer</a>
+</p>
+</div>
+
+<script>
+$(function() { // Retrieve list of repositories from Github and dynamically insert them into sidebar
+
+if(!window.sessionStorage || !JSON) { return; } // Punt on crusty browsers (looking at you IE10)
+
+function JSONP( url, callback ) {
+	var id = ( 'jsonp' + Math.random() * new Date() ).replace('.', '');
+	var script = document.createElement('script');
+	script.src = url.replace( 'callback=?', 'callback=' + id );
+	document.body.appendChild( script );
+	window[ id ] = function( data ) {
+		if (callback) {
+			callback( data );
+		}
+	};
+}
+
+// Build dictionary indexing lower cased project names with their preferred format
+var knownProjects = ["VHDL-extras", "Ripyl", "VerTcl", "LeCroy-colorizer", "Opbasm"];
+var projectDict = {};
+$.each(knownProjects, function(index, v) {
+  projectDict[v.toLowerCase()] = v;
+});
+
+function insert_projects(projects) {
+    var links = [];
+    var cur_proj = "Hdlparse".toLowerCase();
+    
+    $.each(projects, function(key, value) {
+      if(key != cur_proj) {
+        var title;
+        if(key in projectDict) {
+          title = projectDict[key];
+        } else { // Capitalize first char
+          title = key.replace(/^./, function(match) {return match.toUpperCase()});
+        }
+        links.push("<a href='"+ value +"'>" + title + "</a>");
+      }
+    });
+    
+    $("#proj_list").html("<p>"+ links.join("<br>") +"</p>");
+}
+
+var now = new Date().getTime();
+if(sessionStorage.KTcacheTime && now - sessionStorage.KTcacheTime < 5*60*1000 ) { // Use cached values (5 min. expiry)
+  insert_projects(JSON.parse(sessionStorage.KTprojects));
+} else { // Retrieve current projects
+  JSONP("https://api.github.com/users/kevinpt/repos?type=owner&callback=?", function(response) {
+    var projects = {};
+    $.each(response.data, function(index, value) {
+      if(!value.fork)
+        projects[value.name] = value.homepage;
+    });
+    
+    insert_projects(projects);
+    
+    // Store data in session cache
+    sessionStorage.KTprojects = JSON.stringify(projects);
+    var now = new Date().getTime();
+    sessionStorage.KTcacheTime = now;
+  });  
+}
+
+});
+</script>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Kevin Thibedeau.
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
