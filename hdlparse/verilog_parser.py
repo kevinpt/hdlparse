@@ -88,13 +88,25 @@ class VerilogModule(VerilogObject):
 
 
 def parse_verilog_file(fname):
-  '''Parse a named Verilog file'''
+  '''Parse a named Verilog file
+  
+  Args:
+    fname (str): File to parse.
+  Returns:
+    List of parsed objects.
+  '''
   with open(fname, 'rt') as fh:
     text = fh.read()
   return parse_verilog(text)
 
 def parse_verilog(text):
-  '''Parse a text buffer of Verilog code'''
+  '''Parse a text buffer of Verilog code
+
+  Args:
+    text (str): Source code to parse
+  Returns:
+    List of parsed objects.
+  '''
   lex = VerilogLexer
 
   name = None
@@ -195,7 +207,13 @@ def parse_verilog(text):
 
 
 def is_verilog(fname):
-  '''Identify file as Verilog by its extension'''
+  '''Identify file as Verilog by its extension
+  
+  Args:
+    fname (str): File name to check
+  Returns:
+    True when file has a Verilog extension.
+  '''
   return os.path.splitext(fname)[1].lower() in ('.vlog', '.v')
 
 
@@ -205,7 +223,13 @@ class VerilogExtractor(object):
     self.object_cache = {}
 
   def extract_file_objects(self, fname):
-    '''Extract objects from a source file'''
+    '''Extract objects from a source file
+
+    Args:
+      fname(str): Name of file to read from
+    Returns:
+      List of objects extracted from the file.
+    '''
     objects = []
     if fname in self.object_cache:
       objects = self.object_cache[fname]
@@ -218,18 +242,36 @@ class VerilogExtractor(object):
     return objects
 
   def extract_file_modules(self, fname):
-    '''Extract module declarations'''
+    '''Extract module declarations
+
+    Args:
+      fname(str): Name of file to read from
+    Returns:
+      List of extracted modules.
+    '''
     objects = self.extract_file_objects(fname)
     comps = [o for o in objects if isinstance(o, VerilogModule)]
     return comps
 
   def extract_modules(self, text):
-    '''Extract module declarations from a text buffer'''
+    '''Extract module declarations from a text buffer
+    
+    Args:
+      test (str): Verilog source to parse
+    Returns:
+      List of extracted modules.
+    '''
     objects = parse_verilog(text)
     comps = [o for o in objects if isinstance(o, VerilogModule)]
     return comps
 
   def is_array(self, data_type):
-    '''Check if a type is an array type'''
+    '''Check if a type is an array type
+    
+    Args:
+      data_type (str): Data type
+    Returns:
+      True when a data type is an array.
+    '''
     return '[' in data_type
 
