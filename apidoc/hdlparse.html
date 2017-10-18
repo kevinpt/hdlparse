@@ -93,48 +93,42 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Utility class that caches parsed objects</p>
 <dl class="method">
-<dt id="hdlparse.verilog_parser.VerilogExtractor.extract_file_modules">
-<code class="descname">extract_file_modules</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogExtractor.extract_file_modules" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract module declarations</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – Name of file to read from</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of extracted modules.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="hdlparse.verilog_parser.VerilogExtractor.extract_file_objects">
-<code class="descname">extract_file_objects</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogExtractor.extract_file_objects" title="Permalink to this definition">¶</a></dt>
+<dt id="hdlparse.verilog_parser.VerilogExtractor.extract_objects">
+<code class="descname">extract_objects</code><span class="sig-paren">(</span><em>fname</em>, <em>type_filter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogExtractor.extract_objects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract objects from a source file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – Name of file to read from</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fname</strong> (<em>str</em>) – Name of file to read from</li>
+<li><strong>type_filter</strong> (<em>class</em><em>, </em><em>optional</em>) – Object class to filter results</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of objects extracted from the file.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of objects extracted from the file.</p>
+</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="hdlparse.verilog_parser.VerilogExtractor.extract_modules">
-<code class="descname">extract_modules</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogExtractor.extract_modules" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract module declarations from a text buffer</p>
+<dt id="hdlparse.verilog_parser.VerilogExtractor.extract_objects_from_source">
+<code class="descname">extract_objects_from_source</code><span class="sig-paren">(</span><em>text</em>, <em>type_filter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.verilog_parser.VerilogExtractor.extract_objects_from_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract object declarations from a text buffer</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>test</strong> (<em>str</em>) – Verilog source to parse</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> (<em>str</em>) – Source code to parse</li>
+<li><strong>type_filter</strong> (<em>class</em><em>, </em><em>optional</em>) – Object class to filter results</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of extracted modules.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of parsed objects.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -293,78 +287,42 @@
 </tbody>
 </table>
 <dl class="method">
-<dt id="hdlparse.vhdl_parser.VhdlExtractor.add_array_types">
-<code class="descname">add_array_types</code><span class="sig-paren">(</span><em>type_defs</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.add_array_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add array data types to internal registry</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>type_defs</strong> (<em>dict</em>) – Dictionary of type definitions</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="hdlparse.vhdl_parser.VhdlExtractor.extract_components">
-<code class="descname">extract_components</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.extract_components" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract component declarations from a text buffer</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – Source code to parse</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of parsed components.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="hdlparse.vhdl_parser.VhdlExtractor.extract_file_components">
-<code class="descname">extract_file_components</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.extract_file_components" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract component declarations</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – File name to parse</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of parsed components.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="hdlparse.vhdl_parser.VhdlExtractor.extract_file_objects">
-<code class="descname">extract_file_objects</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.extract_file_objects" title="Permalink to this definition">¶</a></dt>
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.extract_objects">
+<code class="descname">extract_objects</code><span class="sig-paren">(</span><em>fname</em>, <em>type_filter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.extract_objects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract objects from a source file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – File to parse</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fname</strong> (<em>str</em>) – File to parse</li>
+<li><strong>type_filter</strong> (<em>class</em><em>, </em><em>optional</em>) – Object class to filter results</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of parsed objects.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of parsed objects.</p>
+</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="hdlparse.vhdl_parser.VhdlExtractor.extract_objects">
-<code class="descname">extract_objects</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.extract_objects" title="Permalink to this definition">¶</a></dt>
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.extract_objects_from_source">
+<code class="descname">extract_objects_from_source</code><span class="sig-paren">(</span><em>text</em>, <em>type_filter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.extract_objects_from_source" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract object declarations from a text buffer</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – Source code to parse</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> (<em>str</em>) – Source code to parse</li>
+<li><strong>type_filter</strong> (<em>class</em><em>, </em><em>optional</em>) – Object class to filter results</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of parsed objects.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of parsed objects.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -401,28 +359,14 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="hdlparse.vhdl_parser.VhdlExtractor.register_array_types">
-<code class="descname">register_array_types</code><span class="sig-paren">(</span><em>objects</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.register_array_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add array type definitions to internal registry</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>objects</strong> (<em>list of VhdlType</em><em> or </em><a class="reference internal" href="#hdlparse.vhdl_parser.VhdlSubtype" title="hdlparse.vhdl_parser.VhdlSubtype"><em>VhdlSubtype</em></a>) – Array types to track</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="hdlparse.vhdl_parser.VhdlExtractor.register_files_array_types">
-<code class="descname">register_files_array_types</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.register_files_array_types" title="Permalink to this definition">¶</a></dt>
+<dt id="hdlparse.vhdl_parser.VhdlExtractor.register_array_types_from_sources">
+<code class="descname">register_array_types_from_sources</code><span class="sig-paren">(</span><em>source_files</em><span class="sig-paren">)</span><a class="headerlink" href="#hdlparse.vhdl_parser.VhdlExtractor.register_array_types_from_sources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add array type definitions from a file list to internal registry</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (<em>list of str</em>) – Files to parse for array definitions</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source_files</strong> (<em>list of str</em>) – Files to parse for array definitions</td>
 </tr>
 </tbody>
 </table>
