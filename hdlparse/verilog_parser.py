@@ -222,11 +222,12 @@ class VerilogExtractor(object):
   def __init__(self):
     self.object_cache = {}
 
-  def extract_file_objects(self, fname):
+  def extract_objects(self, fname, type_filter=None):
     '''Extract objects from a source file
 
     Args:
       fname(str): Name of file to read from
+      type_filter (optional class): Object class to filter results
     Returns:
       List of objects extracted from the file.
     '''
@@ -239,31 +240,28 @@ class VerilogExtractor(object):
         objects = parse_verilog(text)
         self.object_cache[fname] = objects
 
+    if type_filter:
+      objects = [o for o in objects if isinstance(o, type_filter)]
+
     return objects
 
-  def extract_file_modules(self, fname):
-    '''Extract module declarations
+
+  def extract_objects_from_source(self, text, type_filter=None):
+    '''Extract object declarations from a text buffer
 
     Args:
-      fname(str): Name of file to read from
+      text (str): Source code to parse
+      type_filter (optional class): Object class to filter results
     Returns:
-      List of extracted modules.
-    '''
-    objects = self.extract_file_objects(fname)
-    comps = [o for o in objects if isinstance(o, VerilogModule)]
-    return comps
-
-  def extract_modules(self, text):
-    '''Extract module declarations from a text buffer
-    
-    Args:
-      test (str): Verilog source to parse
-    Returns:
-      List of extracted modules.
+      List of parsed objects.
     '''
     objects = parse_verilog(text)
-    comps = [o for o in objects if isinstance(o, VerilogModule)]
-    return comps
+
+    if type_filter:
+      objects = [o for o in objects if isinstance(o, type_filter)]
+
+    return objects
+
 
   def is_array(self, data_type):
     '''Check if a type is an array type

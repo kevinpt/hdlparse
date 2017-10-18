@@ -576,11 +576,12 @@ class VhdlExtractor(object):
     self.array_types |= array_types
     self.object_cache = {}
 
-  def extract_file_objects(self, fname):
+  def extract_objects(self, fname, type_filter=None):
     '''Extract objects from a source file
     
     Args:
       fname (str): File to parse
+      type_filter (optional class): Object class to filter results
     Returns:
       List of parsed objects.
     '''
@@ -592,46 +593,30 @@ class VhdlExtractor(object):
         text = fh.read()
         objects = parse_vhdl(text)
         self.object_cache[fname] = objects
-        self.register_array_types(objects)
+        self._register_array_types(objects)
+
+    if type_filter:
+      objects = [o for o in objects if isinstance(o, type_filter)]
 
     return objects
 
-  def extract_objects(self, text):
+  def extract_objects_from_source(self, text, type_filter=None):
     '''Extract object declarations from a text buffer
-    
+
     Args:
       text (str): Source code to parse
+      type_filter (optional class): Object class to filter results
     Returns:
       List of parsed objects.
     '''
     objects = parse_vhdl(text)
-    self.register_array_types(objects)
+    self._register_array_types(objects)
+
+    if type_filter:
+      objects = [o for o in objects if isinstance(o, type_filter)]
+
     return objects
 
-
-  def extract_file_components(self, fname):
-    '''Extract component declarations
-    
-    Args:
-      fname (str): File name to parse
-    Returns:
-      List of parsed components.
-    '''
-    objects = self.extract_file_objects(fname)
-    comps = [o for o in objects if isinstance(o, VhdlComponent)]
-    return comps
-
-  def extract_components(self, text):
-    '''Extract component declarations from a text buffer
-    
-    Args:
-      text (str): Source code to parse
-    Returns:
-      List of parsed components.
-    '''
-    comps = [o for o in self.extract_objects(text) if isinstance(o, VhdlComponent)]
-    return comps
-  
 
   def is_array(self, data_type):
     '''Check if a type is a known array type
@@ -648,7 +633,7 @@ class VhdlExtractor(object):
     return data_type.lower() in self.array_types
 
 
-  def add_array_types(self, type_defs):
+  def _add_array_types(self, type_defs):
     '''Add array data types to internal registry
     
     Args:
@@ -672,7 +657,7 @@ class VhdlExtractor(object):
     except SyntaxError:
       type_defs = {}
 
-    self.add_array_types(type_defs)
+    self._add_array_types(type_defs)
 
   def save_array_types(self, fname):
     '''Save array type registry to a file
@@ -684,7 +669,7 @@ class VhdlExtractor(object):
     with open(fname, 'wt') as fh:
       pprint(type_defs, stream=fh)
 
-  def register_array_types(self, objects):
+  def _register_array_types(self, objects):
     '''Add array type definitions to internal registry
     
     Args:
@@ -704,15 +689,15 @@ class VhdlExtractor(object):
       if v in self.array_types:
         self.array_types.add(k)
 
-  def register_files_array_types(self, files):
+  def register_array_types_from_sources(self, source_files):
     '''Add array type definitions from a file list to internal registry
 
     Args:
-      files (list of str): Files to parse for array definitions
+      source_files (list of str): Files to parse for array definitions
     '''
-    for fname in files:
+    for fname in source_files:
       if is_vhdl(fname):
-        self.register_array_types(self.extract_file_objects(fname))
+        self._register_array_types(self.extract_objects(fname))
 
 
 if __name__ == '__main__':
@@ -733,7 +718,7 @@ package foo is
 end package;
   '''
 
-  objs = ve.extract_objects(code)
+  objs = ve.extract_objects_from_source(code)
 
   for o in objs:
     print(o.name)
