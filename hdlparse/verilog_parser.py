@@ -227,7 +227,7 @@ class VerilogExtractor(object):
 
     Args:
       fname(str): Name of file to read from
-      type_filter (optional class): Object class to filter results
+      type_filter (class, optional): Object class to filter results
     Returns:
       List of objects extracted from the file.
     '''
@@ -251,7 +251,7 @@ class VerilogExtractor(object):
 
     Args:
       text (str): Source code to parse
-      type_filter (optional class): Object class to filter results
+      type_filter (class, optional): Object class to filter results
     Returns:
       List of parsed objects.
     '''

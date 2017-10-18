@@ -581,7 +581,7 @@ class VhdlExtractor(object):
     
     Args:
       fname (str): File to parse
-      type_filter (optional class): Object class to filter results
+      type_filter (class, optional): Object class to filter results
     Returns:
       List of parsed objects.
     '''
@@ -605,7 +605,7 @@ class VhdlExtractor(object):
 
     Args:
       text (str): Source code to parse
-      type_filter (optional class): Object class to filter results
+      type_filter (class, optional): Object class to filter results
     Returns:
       List of parsed objects.
     '''
