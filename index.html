@@ -182,15 +182,7 @@ command if you have it available.</p>
 <span class="k">print</span><span class="p">(</span><span class="n">vhdl_ex</span><span class="o">.</span><span class="n">is_array</span><span class="p">(</span><span class="s">&#39;custom_subtype&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>You can manually add array definitions with the <code class="xref py py-meth docutils literal"><span class="pre">add_array_types()</span></code> method. Parsed array data can be saved to a file with <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlExtractor.save_array_types" title="hdlparse.vhdl_parser.VhdlExtractor.save_array_types"><code class="xref py py-meth docutils literal"><span class="pre">save_array_types()</span></code></a> and restored with <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlExtractor.load_array_types" title="hdlparse.vhdl_parser.VhdlExtractor.load_array_types"><code class="xref py py-meth docutils literal"><span class="pre">load_array_types()</span></code></a>. This lets you parse one set of files for type definitions and use the saved info for parsing other code at a different time.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="apidoc/modules.html">hdlparse</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="apidoc/hdlparse.html">hdlparse package</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<p>Parsed array data can be saved to a file with <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlExtractor.save_array_types" title="hdlparse.vhdl_parser.VhdlExtractor.save_array_types"><code class="xref py py-meth docutils literal"><span class="pre">save_array_types()</span></code></a> and restored with <a class="reference internal" href="apidoc/hdlparse.html#hdlparse.vhdl_parser.VhdlExtractor.load_array_types" title="hdlparse.vhdl_parser.VhdlExtractor.load_array_types"><code class="xref py py-meth docutils literal"><span class="pre">load_array_types()</span></code></a>. This lets you parse one set of files for type definitions and use the saved info for parsing other code at a different time.</p>
 </div>
 <div class="section" id="verilog">
 <h3>Verilog<a class="headerlink" href="#verilog" title="Permalink to this headline">¶</a></h3>
@@ -246,6 +238,8 @@ command if you have it available.</p>
 <span class="go">        z                   output  wire [4:1]</span>
 <span class="go">        z2                  output  wire [4:1]</span>
 </pre></div>
+</div>
+<div class="toctree-wrapper compound">
 </div>
 </div>
 </div>

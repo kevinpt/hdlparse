@@ -191,13 +191,7 @@ It can be useful to know which data types are an array. The :py:class:`~hdlparse
   print(vhdl_ex.is_array('custom_array'))
   print(vhdl_ex.is_array('custom_subtype'))
 
-You can manually add array definitions with the :py:meth:`~hdlparse.vhdl_parser.VhdlExtractor.add_array_types` method. Parsed array data can be saved to a file with :py:meth:`~hdlparse.vhdl_parser.VhdlExtractor.save_array_types` and restored with :py:meth:`~hdlparse.vhdl_parser.VhdlExtractor.load_array_types`. This lets you parse one set of files for type definitions and use the saved info for parsing other code at a different time.
-
-
-.. toctree::
-   :maxdepth: 2
-
-   apidoc/modules
+Parsed array data can be saved to a file with :py:meth:`~hdlparse.vhdl_parser.VhdlExtractor.save_array_types` and restored with :py:meth:`~hdlparse.vhdl_parser.VhdlExtractor.load_array_types`. This lets you parse one set of files for type definitions and use the saved info for parsing other code at a different time.
 
 
 Verilog
@@ -265,6 +259,12 @@ When run against the example code produces the following:
 	  z                   output  wire [4:1]
 	  z2                  output  wire [4:1]
 
+
+.. toctree::
+   :hidden:
+   :maxdepth: 2
+
+   apidoc/modules
 
 
 Indices and tables
