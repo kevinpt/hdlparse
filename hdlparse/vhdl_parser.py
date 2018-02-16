@@ -142,7 +142,7 @@ vhdl_tokens = {
   ],
 }
       
-VhdlLexer = MiniLexer(vhdl_tokens)
+VhdlLexer = MiniLexer(vhdl_tokens, flags=re.MULTILINE | re.IGNORECASE)
 
 
 class VhdlObject(object):
