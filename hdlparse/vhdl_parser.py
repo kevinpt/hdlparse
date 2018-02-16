@@ -79,7 +79,7 @@ vhdl_tokens = {
   'component': [
     (r'generic\s*\(', None, 'generic_list'),
     (r'port\s*\(', None, 'port_list'),
-    (r'end\s+component\s*;', 'end_component', '#pop'),
+    (r'end\s+component\s*\w*;', 'end_component', '#pop'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
