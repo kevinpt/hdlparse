@@ -478,6 +478,9 @@ def parse_vhdl(text):
       param_items = []
       last_item = generics[-1]
 
+    elif action == 'generic_param_default':
+      last_item.default_value = groups[0]
+
     elif action == 'port_param':
       param_items.append(groups[0])
       port_param_index += 1
@@ -490,6 +493,9 @@ def parse_vhdl(text):
 
       param_items = []
       last_item = ports[-1]
+
+    elif action == 'port_param_default':
+      last_item.default_value = groups[0]
 
     elif action == 'port_array_param_type':
       mode, ptype = groups
