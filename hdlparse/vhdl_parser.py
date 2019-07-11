@@ -84,7 +84,9 @@ vhdl_tokens = {
     (r'--.*\n', None),
   ],
   'entity': [
-    (r'end\s+entity\s*;', 'end_entity', '#pop'),
+    (r'generic\s*\(', None, 'generic_list'),
+    (r'port\s*\(', None, 'port_list'),
+    (r'end\s+\w+\s*;', 'end_entity', '#pop'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
@@ -290,6 +292,30 @@ class VhdlProcedure(VhdlObject):
   def __repr__(self):
     return "VhdlProcedure('{}')".format(self.name)
 
+class VhdlEntity(VhdlObject):
+  '''Entity declaration
+
+  Args:
+    name (str): Name of the entity
+    ports (list of VhdlParameter): Port parameters to the entity
+    generics (list of VhdlParameter): Generic parameters to the entity
+    sections (list of str): Metacomment sections
+    desc (str, optional): Description from object metacomments
+  '''
+  def __init__(self, name, ports, generics=None, sections=None, desc=None):
+    VhdlObject.__init__(self, name, desc)
+    self.kind = 'entity'
+    self.generics = generics if generics is not None else []
+    self.ports = ports
+    self.sections = sections if sections is not None else {}
+
+  def __repr__(self):
+    return "VhdlEntity('{}')".format(self.name)
+
+  def dump(self):
+    print('VHDL entity: {}'.format(self.name))
+    for p in self.ports:
+      print('\t{} ({}), {} ({})'.format(p.name, type(p.name), p.data_type, type(p.data_type)))
 
 class VhdlComponent(VhdlObject):
   '''Component declaration
@@ -423,6 +449,15 @@ def parse_vhdl(text):
       kind = None
       name = None
 
+    elif action == 'entity':
+      kind = 'entity'
+      name = groups[0]
+      generics = []
+      ports = []
+      param_items = []
+      sections = []
+      port_param_index = 0
+
     elif action == 'component':
       kind = 'component'
       name = groups[0]
@@ -443,6 +478,9 @@ def parse_vhdl(text):
       param_items = []
       last_item = generics[-1]
 
+    elif action == 'generic_param_default':
+      last_item.default_value = groups[0]
+
     elif action == 'port_param':
       param_items.append(groups[0])
       port_param_index += 1
@@ -456,6 +494,9 @@ def parse_vhdl(text):
       param_items = []
       last_item = ports[-1]
 
+    elif action == 'port_param_default':
+      last_item.default_value = groups[0]
+
     elif action == 'port_array_param_type':
       mode, ptype = groups
       array_range_start_pos = pos[1]
@@ -468,6 +509,12 @@ def parse_vhdl(text):
 
       param_items = []
       last_item = ports[-1]
+
+    elif action == 'end_entity':
+      vobj = VhdlEntity(name, ports, generics, dict(sections), metacomments)
+      objects.append(vobj)
+      last_item = None
+      metacomments = []
 
     elif action == 'end_component':
       vobj = VhdlComponent(name, cur_package, ports, generics, dict(sections), metacomments)
