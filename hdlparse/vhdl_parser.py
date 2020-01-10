@@ -753,7 +753,7 @@ class VhdlExtractor(object):
     subtypes = {o.name:o.base_type for o in objects if isinstance(o, VhdlSubtype)}
 
     # Find all subtypes of an array type
-    for k,v in subtypes.iteritems():
+    for k,v in subtypes.items():
       while v in subtypes: # Follow subtypes of subtypes
         v = subtypes[v]
       if v in self.array_types:
