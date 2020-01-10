@@ -104,9 +104,12 @@ vhdl_tokens = {
     (r'--.*\n', None),
   ],
   'generic_param_type': [
-    (r'\s*(\w+)\s*', 'generic_param_type'),
+    (r'\s*(\w+)[ \t\r\f\v]*', 'generic_param_type'),
     (r'\s*;\s*', None, '#pop'),
     (r"\s*:=\s*([\w']+)", 'generic_param_default'),
+    (r'\)\s*;\s*--(.*)\n', 'line_comment', '#pop:2'),
+    (r'\n\s*\)\s*;\s*--(.*)\n', 'generic_list_comment', '#pop:2'),
+    (r'\n\s*', None),
     (r'\)\s*;', 'end_generic', '#pop:2'),
     (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
@@ -123,10 +126,13 @@ vhdl_tokens = {
   ],
   'port_param_type': [
     (r'\s*(in|out|inout|buffer)\s+(\w+)\s*\(', 'port_array_param_type', 'array_range'),
-    (r'\s*(in|out|inout|buffer)\s+(\w+)\s*', 'port_param_type'),
+    (r'\s*(in|out|inout|buffer)\s+(\w+)[ \t\r\f\v]*', 'port_param_type'),
     (r'\s*;\s*', None, '#pop'),
     (r"\s*:=\s*([\w']+)", 'port_param_default'),
     (r'--(.*)\n', 'line_comment'),
+    (r'\)\s*;\s*--(.*)\n', 'line_comment', '#pop:2'),
+    (r'\n\s*\)\s*;\s*--(.*)\n', 'port_list_comment', '#pop:2'),
+    (r'\n\s*', None),
     (r'\)\s*;', 'end_port', '#pop:2'),
     (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
@@ -566,7 +572,8 @@ def parse_vhdl(text):
 
     elif action == 'line_comment':
       for i in last_items:
-        i.param_desc = groups[0]
+        if not i.param_desc:
+          i.param_desc = groups[0]
 
   return objects
 
@@ -774,8 +781,9 @@ package foo is
   component acomp is
     port (
       a,b,c : in std_ulogic;   -- no default value
-      f,g,h : inout bit := '1' -- default value '1'
-    );
+      f,g,h : inout bit := '1' -- bit ports 
+    ); -- port list comment
+    
   end component;
 
 end package;
