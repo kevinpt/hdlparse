@@ -174,8 +174,9 @@ class VhdlParameter(object):
     data_type (str): Type name for the parameter
     default_value (str): Default value of the parameter
     desc (str): Description from object metacomments
+    param_desc (str): Description of the parameter
   '''
-  def __init__(self, name, mode=None, data_type=None, default_value=None, desc=None):
+  def __init__(self, name, mode=None, data_type=None, default_value=None, desc=None, param_desc = None):
     self.name = name
     self.mode = mode
     self.data_type = data_type
