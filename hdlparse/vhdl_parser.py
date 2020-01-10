@@ -783,8 +783,9 @@ package foo is
   component acomp is
     port (
       a,b,c : in std_ulogic;   -- no default value
-      f,g,h : inout bit := '1' -- default value '1'
-    );
+      f,g,h : inout bit := '1' -- bit ports 
+    ); -- port list comment
+    
   end component;
 
 end package;
