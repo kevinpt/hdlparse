@@ -10,27 +10,30 @@ from minilexer import MiniLexer
 
 verilog_tokens = {
   'root': [
-    (r'\bmodule\s+(\w+)\s*', 'module', 'module'),
+    (r'\bmodule\s*(\w+)\s*', 'module', 'module'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'//#+(.*)\n', 'metacomment'),
     (r'//.*\n', None),
   ],
   'module': [
-    (r'parameter\s*(signed|integer|realtime|real|time)?\s*(\[[^]]+\])?', 'parameter_start', 'parameters'),
-    (r'(input|inout|output)\s*(reg|supply0|supply1|tri|triand|trior|tri0|tri1|wire|wand|wor)?\s*(signed)?\s*(\[[^]]+\])?', 'module_port_start', 'module_port'),
+    (r'parameter\s+(?:(signed|integer|realtime|real|time)\s+)?(\[[^]]+\])?', 'parameter_start', 'parameters'),
+    (r'(input|inout|output)\s+(?:(reg|supply0|supply1|tri|triand|trior|tri0|tri1|wire|wand|wor)\s+)?(?:(signed)\s+)?(\[[^]]+\])?', 'module_port_start', 'module_port'),
     (r'endmodule', 'end_module', '#pop'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'//#\s*{{(.*)}}\n', 'section_meta'),
     (r'//.*\n', None),
   ],
   'parameters': [
-    (r'\s*parameter\s*(signed|integer|realtime|real|time)?\s*(\[[^]]+\])?', 'parameter_start'),
-    (r'\s*(\w+)[^),;]*', 'param_item'),
+    (r'\s*parameter\s+(?:(signed|integer|realtime|real|time)\s+)?(\[[^]]+\])?', 'parameter_start'),
+    (r'\s*(\w+)[^),;]+', 'param_item'),
     (r',', None),
     (r'[);]', None, '#pop'),
+    (r'/\*', 'block_comment', 'block_comment'),
+    (r'//#\s*{{(.*)}}\n', 'section_meta'),
+    (r'//.*\n', None),
   ],
   'module_port': [
-    (r'\s*(input|inout|output)\s*(reg|supply0|supply1|tri|triand|trior|tri0|tri1|wire|wand|wor)?\s*(signed)?\s*(\[[^]]+\])?', 'module_port_start'),
+    (r'\s*(input|inout|output)\s+(?:(reg|supply0|supply1|tri|triand|trior|tri0|tri1|wire|wand|wor)\s+)?(signed)?\s*(\[[^]]+\])?', 'module_port_start'),
     (r'\s*(\w+)\s*,?', 'port_param'),
     (r'[);]', None, '#pop'),
     (r'//#\s*{{(.*)}}\n', 'section_meta'),
@@ -69,7 +72,7 @@ class VerilogParameter(object):
     if self.default_value is not None:
       param = '{} := {}'.format(param, self.default_value)
     return param
-      
+
   def __repr__(self):
     return "VerilogParameter('{}')".format(self.name)
 
@@ -89,7 +92,7 @@ class VerilogModule(VerilogObject):
 
 def parse_verilog_file(fname):
   '''Parse a named Verilog file
-  
+
   Args:
     fname (str): File to parse.
   Returns:
@@ -208,7 +211,7 @@ def parse_verilog(text):
 
 def is_verilog(fname):
   '''Identify file as Verilog by its extension
-  
+
   Args:
     fname (str): File name to check
   Returns:
@@ -265,7 +268,7 @@ class VerilogExtractor(object):
 
   def is_array(self, data_type):
     '''Check if a type is an array type
-    
+
     Args:
       data_type (str): Data type
     Returns:
