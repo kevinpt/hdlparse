@@ -139,10 +139,12 @@ vhdl_tokens = {
   ],
   'array_range': [
     (r'\(', 'open_paren', 'nested_parens'),
+    (r'(\s*\w+\s*(?:(?:-?|\+?)\s*\w+\s*)+)(\s+downto|\s+to)\s*(\w+)', 'array_range_val'),
     (r'\)', 'array_range_end', '#pop'),
   ],
   'nested_parens': [
     (r'\(', 'open_paren', 'nested_parens'),
+    (r'(\s*\w+\s*(?:(?:-?|\+?)\s*\w+\s*)+)(\s+downto|\s+to)\s*(\w+)', 'array_range_val'),
     (r'\)', 'close_paren', '#pop'),
   ],
   'block_comment': [
@@ -186,9 +188,9 @@ class VhdlParameter(object):
 
   def __str__(self):
     if self.mode is not None:
-      param = '{} : {} {}'.format(self.name, self.mode, self.data_type)
+      param = '{} : {} {}'.format(self.name, self.mode, self.data_type.name + self.data_type.arange)
     else:
-      param = '{} : {}'.format(self.name, self.data_type)
+      param = '{} : {}'.format(self.name, self.data_type.name + self.data_type.arange)
     if self.default_value is not None:
       param = '{} := {}'.format(param, self.default_value)
     if self.param_desc is not None:
@@ -196,7 +198,27 @@ class VhdlParameter(object):
     return param
       
   def __repr__(self):
-    return "VhdlParameter('{}', '{}', '{}')".format(self.name, self.mode, self.data_type)
+    return "VhdlParameter('{}', '{}', '{}')".format(self.name, self.mode, self.data_type.name + self.data_type.arange)
+
+class VhdlParameterType(object):
+  '''Parameter type definition
+
+  Args:  
+    name (str): Name of the type
+    direction(str): "to" or "downto"
+    msb (str): A digit or a name
+    lsb (str): A digit or a name
+    arange (str): Original array range string
+  '''
+  def __init__(self, name, direction = "", msb = "", lsb = "", arange = ""):
+    self.name = name
+    self.direction = direction.strip()
+    self.msb = msb.strip()
+    self.lsb = lsb.strip()
+    self.arange = arange
+
+  def __repr__(self):
+    return "VhdlParameterType('{}','{}')".format(self.name, self.arange)
 
 class VhdlPackage(VhdlObject):
   '''Package declaration
@@ -485,7 +507,7 @@ def parse_vhdl(text):
       
       last_items = []
       for i in param_items:
-        p = VhdlParameter(i, 'in', ptype)
+        p = VhdlParameter(i, 'in', VhdlParameterType(ptype))
         generics.append(p)
         last_items.append(p)
 
@@ -504,7 +526,7 @@ def parse_vhdl(text):
 
       last_items = []
       for i in param_items:
-        p = VhdlParameter(i, mode, ptype)
+        p = VhdlParameter(i, mode, VhdlParameterType(ptype))
         ports.append(p)
         last_items.append(p)
 
@@ -518,12 +540,15 @@ def parse_vhdl(text):
       mode, ptype = groups
       array_range_start_pos = pos[1]
 
+    elif action == 'array_range_val':
+      msb, direction, lsb = groups
+
     elif action == 'array_range_end':
       arange = text[array_range_start_pos:pos[0]+1]
 
       last_items = []
       for i in param_items:
-        p = VhdlParameter(i, mode, ptype + arange)
+        p = VhdlParameter(i, mode, VhdlParameterType(ptype, direction, msb, lsb, arange))
         ports.append(p)
         last_items.append(p)
 
