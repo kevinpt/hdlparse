@@ -140,12 +140,12 @@ vhdl_tokens = {
   ],
   'array_range': [
     (r'\(', 'open_paren', 'nested_parens'),
-    (r'(\s*\w+\s*(?:(?:-?|\+?)\s*\w+\s*)+)(\s+downto|\s+to)\s*(\w+)', 'array_range_val'),
+    (r'\s*([\w\+-]+)(\s+downto|\s+to)\s+([\w\+-]+)', 'array_range_val'),
     (r'\)', 'array_range_end', '#pop'),
   ],
   'nested_parens': [
     (r'\(', 'open_paren', 'nested_parens'),
-    (r'(\s*\w+\s*(?:(?:-?|\+?)\s*\w+\s*)+)(\s+downto|\s+to)\s*(\w+)', 'array_range_val'),
+    (r'\s*([\w\+-]+)(\s+downto|\s+to)\s+([\w\+-]+)', 'array_range_val'),
     (r'\)', 'close_paren', '#pop'),
   ],
   'block_comment': [
