@@ -140,7 +140,7 @@ vhdl_tokens = {
   ],
   'array_range': [
     (r'\(', 'open_paren', 'nested_parens'),
-    (r'\s*([\w\+-]+)(\s+downto|\s+to)\s+([\w\+-]+)', 'array_range_val'),
+    (r'\s*(\w[\w\+-\s]+\w)(\s+downto|\s+to)\s+([\w\+-]+)', 'array_range_val'),
     (r'\)', 'array_range_end', '#pop'),
   ],
   'nested_parens': [
@@ -207,15 +207,15 @@ class VhdlParameterType(object):
   Args:  
     name (str): Name of the type
     direction(str): "to" or "downto"
-    msb (str): A digit or a name
-    lsb (str): A digit or a name
+    r_bound (str): A simple expression based on digits or variable names
+    l_bound (str): A simple expression based on digits or variable names
     arange (str): Original array range string
   '''
-  def __init__(self, name, direction = "", msb = "", lsb = "", arange = ""):
+  def __init__(self, name, direction = "", r_bound = "", l_bound = "", arange = ""):
     self.name = name
     self.direction = direction.strip()
-    self.msb = msb.strip()
-    self.lsb = lsb.strip()
+    self.r_bound = r_bound.strip()
+    self.l_bound = l_bound.strip()
     self.arange = arange
 
   def __repr__(self):
@@ -542,14 +542,14 @@ def parse_vhdl(text):
       array_range_start_pos = pos[1]
 
     elif action == 'array_range_val':
-      msb, direction, lsb = groups
+      r_bound, direction, l_bound = groups
 
     elif action == 'array_range_end':
       arange = text[array_range_start_pos:pos[0]+1]
 
       last_items = []
       for i in param_items:
-        p = VhdlParameter(i, mode, VhdlParameterType(ptype, direction, msb, lsb, arange))
+        p = VhdlParameter(i, mode, VhdlParameterType(ptype, direction, r_bound, l_bound, arange))
         ports.append(p)
         last_items.append(p)
 
@@ -807,8 +807,9 @@ package foo is
 
   component acomp is
     port (
-      a,b,c : in std_ulogic;   -- no default value
-      f,g,h : inout bit := '1' -- bit ports 
+      a,b,c : in std_ulogic;    -- no default value
+      f,g,h : inout bit := '1'; -- bit ports 
+      v : in std_logic_vector(lBound -1 downto 0) -- array range
     ); -- port list comment
     
   end component;
