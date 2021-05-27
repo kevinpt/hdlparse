@@ -140,12 +140,12 @@ vhdl_tokens = {
   ],
   'array_range': [
     (r'\(', 'open_paren', 'nested_parens'),
-    (r'\s*(\w[\w\+-\s]+\w)(\s+downto|\s+to)\s+([\w\+-]+)', 'array_range_val'),
+    (r'\s*([\w\+\-\*/\s]+)(\s+(?:down)?to)\s+([\w\+\-\*/\s]+)', 'array_range_val'),
     (r'\)', 'array_range_end', '#pop'),
   ],
   'nested_parens': [
     (r'\(', 'open_paren', 'nested_parens'),
-    (r'\s*([\w\+-]+)(\s+downto|\s+to)\s+([\w\+-]+)', 'array_range_val'),
+    (r'\s*([\w\+\-\*/\s]+)(\s+(?:down)?to)\s+([\w\+\-\*/\s]+)', 'array_range_val'),
     (r'\)', 'close_paren', '#pop'),
   ],
   'block_comment': [
@@ -542,7 +542,7 @@ def parse_vhdl(text):
       array_range_start_pos = pos[1]
 
     elif action == 'array_range_val':
-      r_bound, direction, l_bound = groups
+      l_bound, direction, r_bound = groups
 
     elif action == 'array_range_end':
       arange = text[array_range_start_pos:pos[0]+1]
