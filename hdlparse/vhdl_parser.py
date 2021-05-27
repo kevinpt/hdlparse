@@ -87,6 +87,7 @@ vhdl_tokens = {
     (r'generic\s*\(', None, 'generic_list'),
     (r'port\s*\(', None, 'port_list'),
     (r'end\s+\w+\s*;', 'end_entity', '#pop'),
+    (r'end\s+entity\s+\w+\s*;', 'end_entity', '#pop'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
@@ -104,9 +105,12 @@ vhdl_tokens = {
     (r'--.*\n', None),
   ],
   'generic_param_type': [
-    (r'\s*(\w+)\s*', 'generic_param_type'),
+    (r'\s*(\w+)[ \t\r\f\v]*', 'generic_param_type'),
     (r'\s*;\s*', None, '#pop'),
     (r"\s*:=\s*([\w']+)", 'generic_param_default'),
+    (r'\)\s*;\s*--(.*)\n', 'line_comment', '#pop:2'),
+    (r'\n\s*\)\s*;\s*--(.*)\n', 'generic_list_comment', '#pop:2'),
+    (r'\n\s*', None),
     (r'\)\s*;', 'end_generic', '#pop:2'),
     (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
@@ -119,17 +123,20 @@ vhdl_tokens = {
     (r'--#\s*{{(.*)}}\n', 'section_meta'),
     (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
-    (r'--.*\n', None),
+    (r'--(.*)\n', 'line_comment'),
   ],
   'port_param_type': [
     (r'\s*(in|out|inout|buffer)\s+(\w+)\s*\(', 'port_array_param_type', 'array_range'),
-    (r'\s*(in|out|inout|buffer)\s+(\w+)\s*', 'port_param_type'),
+    (r'\s*(in|out|inout|buffer)\s+(\w+)[ \t\r\f\v]*', 'port_param_type'),
     (r'\s*;\s*', None, '#pop'),
     (r"\s*:=\s*([\w']+)", 'port_param_default'),
+    (r'--(.*)\n', 'line_comment'),
+    (r'\)\s*;\s*--(.*)\n', 'line_comment', '#pop:2'),
+    (r'\n\s*\)\s*;\s*--(.*)\n', 'port_list_comment', '#pop:2'),
+    (r'\n\s*', None),
     (r'\)\s*;', 'end_port', '#pop:2'),
     (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
-    (r'--.*\n', None),
   ],
   'array_range': [
     (r'\(', 'open_paren', 'nested_parens'),
@@ -168,13 +175,15 @@ class VhdlParameter(object):
     data_type (str): Type name for the parameter
     default_value (str): Default value of the parameter
     desc (str): Description from object metacomments
+    param_desc (str): Description of the parameter
   '''
-  def __init__(self, name, mode=None, data_type=None, default_value=None, desc=None):
+  def __init__(self, name, mode=None, data_type=None, default_value=None, desc=None, param_desc = None):
     self.name = name
     self.mode = mode
     self.data_type = data_type
     self.default_value = default_value
     self.desc = desc
+    self.param_desc = None
 
   def __str__(self):
     if self.mode is not None:
@@ -183,6 +192,8 @@ class VhdlParameter(object):
       param = '{} : {}'.format(self.name, self.data_type)
     if self.default_value is not None:
       param = '{} := {}'.format(param, self.default_value)
+    if self.param_desc is not None:
+      param = '{} --{}'.format(param, self.param_desc)
     return param
       
   def __repr__(self):
@@ -294,7 +305,6 @@ class VhdlProcedure(VhdlObject):
 
 class VhdlEntity(VhdlObject):
   '''Entity declaration
-
   Args:
     name (str): Name of the entity
     ports (list of VhdlParameter): Port parameters to the entity
@@ -381,7 +391,7 @@ def parse_vhdl(text):
   ports = []
   sections = []
   port_param_index = 0
-  last_item = None
+  last_items = []
   array_range_start_pos = 0
 
   objects = []
@@ -389,10 +399,11 @@ def parse_vhdl(text):
   for pos, action, groups in lex.run(text):
     if action == 'metacomment':
       realigned = re.sub(r'^#+', lambda m: ' ' * len(m.group(0)), groups[0])
-      if last_item is None:
+      if not last_items:
         metacomments.append(realigned)
       else:
-        last_item.desc = realigned
+        for i in last_items:
+          i.desc = realigned
     if action == 'section_meta':
       sections.append((port_param_index, groups[0]))
 
@@ -448,7 +459,7 @@ def parse_vhdl(text):
       param_items = []
       kind = None
       name = None
-
+   
     elif action == 'entity':
       kind = 'entity'
       name = groups[0]
@@ -473,13 +484,17 @@ def parse_vhdl(text):
     elif action == 'generic_param_type':
       ptype = groups[0]
       
+      last_items = []
       for i in param_items:
-        generics.append(VhdlParameter(i, 'in', ptype))
+        p = VhdlParameter(i, 'in', ptype)
+        generics.append(p)
+        last_items.append(p)
+
       param_items = []
-      last_item = generics[-1]
 
     elif action == 'generic_param_default':
-      last_item.default_value = groups[0]
+      for i in last_items:
+        i.default_value = groups[0]
 
     elif action == 'port_param':
       param_items.append(groups[0])
@@ -488,14 +503,17 @@ def parse_vhdl(text):
     elif action == 'port_param_type':
       mode, ptype = groups
 
+      last_items = []
       for i in param_items:
-        ports.append(VhdlParameter(i, mode, ptype))
+        p = VhdlParameter(i, mode, ptype)
+        ports.append(p)
+        last_items.append(p)
 
       param_items = []
-      last_item = ports[-1]
 
     elif action == 'port_param_default':
-      last_item.default_value = groups[0]
+      for i in last_items:
+        i.default_value = groups[0]
 
     elif action == 'port_array_param_type':
       mode, ptype = groups
@@ -504,22 +522,24 @@ def parse_vhdl(text):
     elif action == 'array_range_end':
       arange = text[array_range_start_pos:pos[0]+1]
 
+      last_items = []
       for i in param_items:
-        ports.append(VhdlParameter(i, mode, ptype + arange))
+        p = VhdlParameter(i, mode, ptype + arange)
+        ports.append(p)
+        last_items.append(p)
 
       param_items = []
-      last_item = ports[-1]
 
     elif action == 'end_entity':
       vobj = VhdlEntity(name, ports, generics, dict(sections), metacomments)
       objects.append(vobj)
-      last_item = None
+      last_items = []
       metacomments = []
 
     elif action == 'end_component':
       vobj = VhdlComponent(name, cur_package, ports, generics, dict(sections), metacomments)
       objects.append(vobj)
-      last_item = None
+      last_items = []
       metacomments = []
 
     elif action == 'package':
@@ -551,6 +571,11 @@ def parse_vhdl(text):
       kind = None
       name = None
       metacomments = []
+
+    elif action == 'line_comment':
+      for i in last_items:
+        if not i.param_desc:
+          i.param_desc = groups[0]
 
   return objects
 
@@ -730,7 +755,7 @@ class VhdlExtractor(object):
     subtypes = {o.name:o.base_type for o in objects if isinstance(o, VhdlSubtype)}
 
     # Find all subtypes of an array type
-    for k,v in subtypes.iteritems():
+    for k,v in subtypes.items():
       while v in subtypes: # Follow subtypes of subtypes
         v = subtypes[v]
       if v in self.array_types:
@@ -757,9 +782,10 @@ package foo is
 
   component acomp is
     port (
-      a,b,c : in std_ulogic;
-      f,g,h : inout bit
-    );
+      a,b,c : in std_ulogic;   -- no default value
+      f,g,h : inout bit := '1' -- bit ports 
+    ); -- port list comment
+    
   end component;
 
 end package;
