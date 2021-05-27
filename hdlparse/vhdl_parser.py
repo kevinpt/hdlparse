@@ -33,13 +33,12 @@ vhdl_tokens = {
     (r'constant\s+(\w+)\s+:\s+(\w+)', 'constant'),
     (r'type\s+(\w+)\s*is', 'type', 'type_decl'),
     (r'end\s+\w+\s*;', None, '#pop'),
-    (r'end\s+package\s+\w+\s*;', None, '#pop'),
     (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
   'package_body': [
-    (r'end\s+package\s+body', None, '#pop'),
+    (r'end\s+\w+\s*;', None, '#pop'),
     (r'--#(.*)\n', 'metacomment'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
@@ -91,7 +90,6 @@ vhdl_tokens = {
   ],
   'architecture': [
     (r'end\s+\w+\s*;', 'end_arch', '#pop'),
-    (r'end\s+architecture\s+\w+\s*;', 'end_arch', '#pop'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'--.*\n', None),
   ],
@@ -439,7 +437,7 @@ def parse_vhdl(text):
 
     elif action == 'generic_param_type':
       ptype = groups[0]
-      
+
       for i in param_items:
         generics.append(VhdlParameter(i, 'in', ptype))
       param_items = []
