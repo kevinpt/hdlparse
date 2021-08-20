@@ -22,7 +22,7 @@ class MiniLexer(object):
     self.tokens = {}
 
     # Pre-process the state definitions
-    for state, patterns in tokens.iteritems():
+    for state, patterns in tokens.items():
       full_patterns = []
       for p in patterns:
         pat = re.compile(p[0], flags)
@@ -33,7 +33,7 @@ class MiniLexer(object):
         if new_state and new_state.startswith('#pop'):
           try:
             new_state = -int(new_state.split(':')[1])
-          except IndexError, ValueError:
+          except (IndexError, ValueError):
             new_state = -1
 
         full_patterns.append((pat, action, new_state))
