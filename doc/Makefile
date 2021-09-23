@@ -1,16 +1,33 @@
-# Minimal makefile for Sphinx documentation
-#
-
-# You can set these variables from the command line.
+# Sphinx options.
 SPHINXOPTS    =
-SPHINXBUILD   = python -msphinx
-SPHINXPROJ    = HdlParse
-SOURCEDIR     = .
+SPHINXBUILD   = sphinx-build
+SPHINXPROJ    = pyHDLParser
+PAPER         =
 BUILDDIR      = _build
 
-# Put it first so that "make" without argument is like "make help".
+PAPEROPT_a4     = -D latex_paper_size=a4
+PAPEROPT_letter = -D latex_paper_size=letter
+ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees -T -D language=en $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+#---
+
+man:
+	$(SPHINXBUILD) -b man $(ALLSPHINXOPTS) $(BUILDDIR)/man
+
+#---
+
+html:
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+
+#---
+
+latex:
+	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+
+#---
 
 .PHONY: help Makefile
 
