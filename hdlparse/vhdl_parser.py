@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2017 Kevin Thibedeau
 # Distributed under the terms of the MIT license
-from __future__ import print_function
+
 
 import re, os, io, ast
 from pprint import pprint
-from minilexer import MiniLexer
+from .minilexer import MiniLexer
 
 '''VHDL documentation parser'''
 
@@ -683,7 +683,7 @@ class VhdlExtractor(object):
     subtypes = {o.name:o.base_type for o in objects if isinstance(o, VhdlSubtype)}
 
     # Find all subtypes of an array type
-    for k,v in subtypes.iteritems():
+    for k,v in subtypes.items():
       while v in subtypes: # Follow subtypes of subtypes
         v = subtypes[v]
       if v in self.array_types:

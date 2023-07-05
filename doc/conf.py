@@ -45,9 +45,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Hdlparse'
-copyright = u'2017, Kevin Thibedeau'
-author = u'Kevin Thibedeau'
+project = 'Hdlparse'
+copyright = '2017, Kevin Thibedeau'
+author = 'Kevin Thibedeau'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -171,8 +171,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'HdlParse.tex', u'HdlParse Documentation',
-     u'Kevin Thibedeau', 'manual'),
+    (master_doc, 'HdlParse.tex', 'HdlParse Documentation',
+     'Kevin Thibedeau', 'manual'),
 ]
 
 
@@ -181,7 +181,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'hdlparse', u'HdlParse Documentation',
+    (master_doc, 'hdlparse', 'HdlParse Documentation',
      [author], 1)
 ]
 
@@ -192,7 +192,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'HdlParse', u'HdlParse Documentation',
+    (master_doc, 'HdlParse', 'HdlParse Documentation',
      author, 'HdlParse', 'One line description of project.',
      'Miscellaneous'),
 ]
