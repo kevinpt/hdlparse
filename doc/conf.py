@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # HdlParse documentation build configuration file, created by
 # sphinx-quickstart on Sun Oct 15 14:19:42 2017.
 #
@@ -18,6 +16,7 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('..'))
 
 
@@ -108,7 +107,7 @@ html_theme_options = {
   'font_family': 'Verdana, Geneva, sans-serif',
   'github_user': 'kevinpt',
   'github_repo': 'hdlparse',
-  'github_button': True
+  'github_button': True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -127,17 +126,16 @@ html_sidebars = {
         'relations.html', # needs 'show_related': True theme option to display
         'localtoc.html',
         'projects.html',
-        'searchbox.html'
+        'searchbox.html',
     ],
-    
     'index': [
         'about.html',
         'download.html',
         'relations.html',
         'localtoc.html',
         'projects.html',
-        'searchbox.html'
-    ]
+        'searchbox.html',
+    ],
 }
 
 
@@ -182,7 +180,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'hdlparse', 'HdlParse Documentation',
-     [author], 1)
+     [author], 1),
 ]
 
 
@@ -196,6 +194,3 @@ texinfo_documents = [
      author, 'HdlParse', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright © 2017 Kevin Thibedeau
 # Distributed under the terms of the MIT license
 
@@ -9,14 +8,15 @@ import re
 
 __version__ = '1.0.5'
 
-class MiniLexer(object):
-  '''Simple lexer state machine with regex matching rules'''
+class MiniLexer:
+  '''Simple lexer state machine with regex matching rules.'''
 
-  def __init__(self, tokens, flags=re.MULTILINE):
-    '''Create a new lexer
-    
+  def __init__(self, tokens: dict, flags: int=re.MULTILINE) -> None:
+    '''Create a new lexer.
+
     Args:
-      tokens (dict(match rules)): Hierarchical dict of states with a list of regex patterns and transitions
+      tokens (dict(match rules)): Hierarchical dict of states with a list of
+        regex patterns and transitions
       flags (int): Optional regex flags
     '''
     self.tokens = {}
@@ -40,16 +40,15 @@ class MiniLexer(object):
       self.tokens[state] = full_patterns
 
 
-  def run(self, text):
-    '''Run lexer rules against a source text
+  def run(self, text: str):
+    '''Run lexer rules against a source text.
 
     Args:
-      text (str): Text to apply lexer to
+      text: Text to apply lexer to
 
     Yields:
       A sequence of lexer matches.
     '''
-
     stack = ['root']
     pos = 0
 
@@ -60,7 +59,6 @@ class MiniLexer(object):
         m = pat.match(text, pos)
         if m:
           if action:
-            #print('## MATCH: {} -> {}'.format(m.group(), action))
             yield (pos, m.end()-1), action, m.groups()
 
           pos = m.end()
@@ -71,7 +69,6 @@ class MiniLexer(object):
             else:
               stack.append(new_state)
 
-            #print('## CHANGE STATE:', pos, new_state, stack)
             patterns = self.tokens[stack[-1]]
 
           break

@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
 # Copyright © 2017 Kevin Thibedeau
 # Distributed under the terms of the MIT license
 
 
-import re, os, io, ast, pprint, collections
+import collections
+import os
+
 from .minilexer import MiniLexer
 
 '''Verilog documentation parser'''
@@ -45,62 +46,63 @@ verilog_tokens = {
 
 VerilogLexer = MiniLexer(verilog_tokens)
 
-class VerilogObject(object):
-  '''Base class for parsed Verilog objects'''
-  def __init__(self, name, desc=None):
+class VerilogObject:
+  '''Base class for parsed Verilog objects.'''
+  def __init__(self, name, desc=None) -> None:
     self.name = name
     self.kind = 'unknown'
     self.desc = desc
 
-class VerilogParameter(object):
-  '''Parameter and port to a module'''
-  def __init__(self, name, mode=None, data_type=None, default_value=None, desc=None):
+class VerilogParameter:
+  '''Parameter and port to a module.'''
+  def __init__(self, name, mode=None, data_type=None, default_value=None, desc=None) -> None:
     self.name = name
     self.mode = mode
     self.data_type = data_type
     self.default_value = default_value
     self.desc = desc
 
-  def __str__(self):
+  def __str__(self) -> str:
     if self.mode is not None:
-      param = '{} : {} {}'.format(self.name, self.mode, self.data_type)
+      param = f'{self.name} : {self.mode} {self.data_type}'
     else:
-      param = '{} : {}'.format(self.name, self.data_type)
+      param = f'{self.name} : {self.data_type}'
     if self.default_value is not None:
-      param = '{} := {}'.format(param, self.default_value)
+      param = f'{param} := {self.default_value}'
     return param
-      
-  def __repr__(self):
-    return "VerilogParameter('{}')".format(self.name)
+
+  def __repr__(self) -> str:
+    return f"VerilogParameter('{self.name}')"
 
 class VerilogModule(VerilogObject):
-  '''Module definition'''
-  def __init__(self, name, ports, generics=None, sections=None, desc=None):
+  '''Module definition.'''
+  def __init__(self, name, ports, generics=None, sections=None, desc=None) -> None:
     VerilogObject.__init__(self, name, desc)
     self.kind = 'module'
     # Verilog params
     self.generics = generics if generics is not None else []
     self.ports = ports
     self.sections = sections if sections is not None else {}
-  def __repr__(self):
-    return "VerilogModule('{}') {}".format(self.name, self.ports)
+  def __repr__(self) -> str:
+    return f"VerilogModule('{self.name}') {self.ports}"
 
 
 
 def parse_verilog_file(fname):
-  '''Parse a named Verilog file
-  
+  '''Parse a named Verilog file.
+
   Args:
     fname (str): File to parse.
+
   Returns:
     List of parsed objects.
   '''
-  with open(fname, 'rt') as fh:
+  with open(fname) as fh:
     text = fh.read()
   return parse_verilog(text)
 
 def parse_verilog(text):
-  '''Parse a text buffer of Verilog code
+  '''Parse a text buffer of Verilog code.
 
   Args:
     text (str): Source code to parse
@@ -110,13 +112,10 @@ def parse_verilog(text):
   lex = VerilogLexer
 
   name = None
-  kind = None
-  saved_type = None
   mode = 'input'
   ptype = 'wire'
 
   metacomments = []
-  parameters = []
   param_items = []
 
   generics = []
@@ -124,11 +123,10 @@ def parse_verilog(text):
   sections = []
   port_param_index = 0
   last_item = None
-  array_range_start_pos = 0
 
   objects = []
 
-  for pos, action, groups in lex.run(text):
+  for _pos, action, groups in lex.run(text):
     if action == 'metacomment':
       if last_item is None:
         metacomments.append(groups[0])
@@ -139,7 +137,6 @@ def parse_verilog(text):
       sections.append((port_param_index, groups[0]))
 
     elif action == 'module':
-      kind = 'module'
       name = groups[0]
       generics = []
       ports = collections.OrderedDict()
@@ -207,8 +204,8 @@ def parse_verilog(text):
 
 
 def is_verilog(fname):
-  '''Identify file as Verilog by its extension
-  
+  '''Identify file as Verilog by its extension.
+
   Args:
     fname (str): File name to check
   Returns:
@@ -217,13 +214,13 @@ def is_verilog(fname):
   return os.path.splitext(fname)[1].lower() in ('.vlog', '.v')
 
 
-class VerilogExtractor(object):
-  '''Utility class that caches parsed objects'''
-  def __init__(self):
+class VerilogExtractor:
+  '''Utility class that caches parsed objects.'''
+  def __init__(self) -> None:
     self.object_cache = {}
 
   def extract_objects(self, fname, type_filter=None):
-    '''Extract objects from a source file
+    '''Extract objects from a source file.
 
     Args:
       fname(str): Name of file to read from
@@ -235,7 +232,7 @@ class VerilogExtractor(object):
     if fname in self.object_cache:
       objects = self.object_cache[fname]
     else:
-      with io.open(fname, 'rt', encoding='utf-8') as fh:
+      with open(fname, encoding='utf-8') as fh:
         text = fh.read()
         objects = parse_verilog(text)
         self.object_cache[fname] = objects
@@ -247,7 +244,7 @@ class VerilogExtractor(object):
 
 
   def extract_objects_from_source(self, text, type_filter=None):
-    '''Extract object declarations from a text buffer
+    '''Extract object declarations from a text buffer.
 
     Args:
       text (str): Source code to parse
@@ -264,8 +261,8 @@ class VerilogExtractor(object):
 
 
   def is_array(self, data_type):
-    '''Check if a type is an array type
-    
+    '''Check if a type is an array type.
+
     Args:
       data_type (str): Data type
     Returns:
