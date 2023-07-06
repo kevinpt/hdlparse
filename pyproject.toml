@@ -30,3 +30,28 @@ Downloads = "http://kevinpt.github.io/hdlparse"
 [build-system]
 requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
+[tool.ruff]
+select = [
+	"ALL",
+	"D",	# pydocstyle
+	"E",	# pycodestyle
+	"W",	# pycodestyle
+	"F",	# pyflake
+	"I001", # isort
+	"UP",
+	"ERA",
+	"COM",
+]
+tab-size = 4
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.ruff.isort]
+lines-between-types = 1
+order-by-type = true
+
+[tool.ruff.flake8-quotes]
+docstring-quotes = "single"
+inline-quotes = "single"
+multiline-quotes = "single"
