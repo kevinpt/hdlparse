@@ -99,7 +99,7 @@ Within each module are extractor classes :py:class:`~hdlparse.vhdl_parser.VhdlEx
 VHDL
 ~~~~
 
-The VHDL parser can extract a variety of different objects from sourec code. It can be used to access package definitions and component declarations,type and subtype definitions, functions, and procedures found within a package. It will not process entity declarations or nested subprograms and types.
+The VHDL parser can extract a variety of different objects from source code. It can be used to access package definitions and component declarations,type and subtype definitions, functions, and procedures found within a package. It will not process entity declarations or nested subprograms and types.
 
 Extraction proceeds as follows:
 
